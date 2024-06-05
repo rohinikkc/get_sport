@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "530090458409",
+    "project_id": "getsport-8062a",
+    "storage_bucket": "getsport-8062a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530090458409:android:772dfa2835fce8f9904b38",
+        "android_client_info": {
+          "package_name": "com.example.getsport"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxgoVslCrA8ttHZ-Y3e4TfgVgED2HRxIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
