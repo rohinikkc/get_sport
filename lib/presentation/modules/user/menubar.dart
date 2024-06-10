@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getsport/data/model/usermodel.dart';
 import 'package:getsport/presentation/modules/user/bottom_navigation.dart';
 import 'package:getsport/presentation/modules/user/useraccount.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class Menu extends StatefulWidget {
    Menu({super.key});
@@ -27,7 +28,7 @@ final _auth=FirebaseAuth.instance;
         backgroundColor: Colors.transparent,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back_sharp,)),
+        }, icon: const Icon(Icons.arrow_back_sharp,)),
         
       ),
       body:
@@ -55,7 +56,7 @@ final _auth=FirebaseAuth.instance;
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("HI, Welcome Back",
+                    const Text("HI, Welcome Back",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
                       StreamBuilder(stream: FirebaseFirestore.instance.collection('user').doc(id).snapshots(),
             builder: (context,snapshot){
@@ -64,7 +65,7 @@ final _auth=FirebaseAuth.instance;
               return  Padding(
                 padding: const EdgeInsets.only(top: 10, left: 10),
                 child:  Text(userModel.name,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
               );
             },
              
@@ -78,10 +79,10 @@ final _auth=FirebaseAuth.instance;
           ),
                
          ListTile(
-           leading: Icon(Icons.account_circle),
-           title: Text('Account'),
+           leading: const Icon(Icons.account_circle),
+           title: const Text('Account'),
            onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>UserAccount()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const UserAccount()));
             
              print('Account tapped');
            },
@@ -89,8 +90,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.info),
-           title: Text('Reset your contact info'),
+           leading: const Icon(Icons.info),
+           title: const Text('Reset your contact info'),
            onTap: () {
              // Handle reset contact info tap event
              print('Reset contact info tapped');
@@ -99,8 +100,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.notifications),
-           title: Text('Get notification for Events Venues, Forum replies and Updates'),
+           leading: const Icon(Icons.notifications),
+           title: const Text('Get notification for Events Venues, Forum replies and Updates'),
            onTap: () {
             
              print('Notification tapped');
@@ -109,8 +110,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.shopping_cart),
-           title: Text('Find Order Updates, Returns & Cancellations.'),
+           leading: const Icon(Icons.shopping_cart),
+           title: const Text('Find Order Updates, Returns & Cancellations.'),
            onTap: () {
           
              print('Orders tapped');
@@ -119,8 +120,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.favorite),
-           title: Text('Save & view your favourites here.'),
+           leading: const Icon(Icons.favorite),
+           title: const Text('Save & view your favourites here.'),
            onTap: () {
             
              print('Wishlist tapped');
@@ -129,8 +130,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.settings),
-           title: Text('Reset your password'),
+           leading: const Icon(Icons.settings),
+           title: const Text('Reset your password'),
            onTap: () {
              
              print('Setting tapped');
@@ -139,8 +140,8 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.help),
-           title: Text('Raise a concern or read our FAQs'),
+           leading: const Icon(Icons.help),
+           title: const Text('Raise a concern or read our FAQs'),
            onTap: () {
              print('Help and Support tapped');
            },
@@ -148,20 +149,21 @@ final _auth=FirebaseAuth.instance;
          
          
          ListTile(
-           leading: Icon(Icons.info),
-           title: Text('App info'),
+           leading: const Icon(Icons.info),
+           title: const Text('App info'),
            onTap: () {
             
              print('App info tapped');
            },
          ),
-         SizedBox(height: 130,),
+        //  const SizedBox(//),
          
          
          ListTile(
-           leading: Icon(Icons.logout),
-           title: Text('Logout'),
+           leading: const Icon(Icons.logout),
+           title: const Text('Logout'),
            onTap: () {
+            Helper.clearPreference(context);
             
              print('Logout tapped');
            },

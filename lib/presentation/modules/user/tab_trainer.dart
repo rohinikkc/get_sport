@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:getsport/data/db_controller.dart';
-import 'package:getsport/data/model/acadamymodel.dart';
+import 'package:getsport/data/model/coach_model.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 
-class Academy extends StatelessWidget {
-  const Academy({super.key});
+class TabTrainerView
+ extends StatelessWidget {
+  const TabTrainerView
+  ({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back_ios_new_rounded),
+        leading: Icon(Icons.arrow_back_ios_new_rounded),
         actions: const [
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -29,23 +29,23 @@ class Academy extends StatelessWidget {
       ),
       backgroundColor: Colors.blue.shade900.withOpacity(.6),
       body: Expanded(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: DbController().getAllAcademy(),
+        child:StreamBuilder<QuerySnapshot>(
+              stream: DbController().getAllTrainer(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Helper.indiacator();
                 }
-                List<AcadamyModel> listOfAcademy = [];
-                listOfAcademy = snapshot.data!.docs
+                List<CoachModel> listOfCoach = [];
+                listOfCoach = snapshot.data!.docs
                     .map((e) =>
-                        AcadamyModel.fromMap(e.data() as Map<String, dynamic>))
+                        CoachModel.fromJson(e.data() as Map<String, dynamic>))
                     .toList();
                 if (snapshot.hasData) {
                   return Helper.emptyListWidget(
-                      listOfAcademy,
+                      listOfCoach,
                       "No Academy",
                       ListView.builder(
-                          itemCount: listOfAcademy.length,
+                          itemCount: listOfCoach.length,
                           itemBuilder: (context, index) {
                             return Row(children: [
                               SizedBox(
@@ -53,14 +53,14 @@ class Academy extends StatelessWidget {
                                   width: 150,
                                   child: Image.network(
                                       fit: BoxFit.cover,
-                                      listOfAcademy[index].image!)),
+                                      listOfCoach[index].profile)),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 170),
                                 child: Column(
                                   children: [
                                     Text(
-                                      listOfAcademy[index]
-                                          .acadamyName
+                                      listOfCoach[index]
+                                          .name
                                           .toString(),
                                       style: const TextStyle(
                                           fontSize: 15,
@@ -76,7 +76,7 @@ class Academy extends StatelessWidget {
                                             color: Colors.white,
                                           ),
                                           Text(
-                                            listOfAcademy[index].location!,
+                                            listOfCoach[index].location,
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -104,22 +104,25 @@ class Academy extends StatelessWidget {
                 } else {
                   return const SizedBox();
                 }
-              })),
-
-      // Text(
-      //   'Feathrall Coaching Classes',
-      //   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-      // ),
-      // Text('Football clup'),
-      // SizedBox(height: 10.0),
-      // Text(
-      //   'DIEGO FOOTBALL ACADEMY',
-      //   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-      // ),
-      // Text('Malappuram'),
-      // Text('42'),
-      // Text('Football Coaching Classes'),
-      // Text('Football club'),
-    );
+              }) ),
+     
+      
+          // Text(
+          //   'Feathrall Coaching Classes',
+          //   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          // ),
+          // Text('Football clup'),
+          // SizedBox(height: 10.0),
+          // Text(
+          //   'DIEGO FOOTBALL ACADEMY',
+          //   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+          // ),
+          // Text('Malappuram'),
+          // Text('42'),
+          // Text('Football Coaching Classes'),
+          // Text('Football club'),
+        
+      );
+    
   }
 }

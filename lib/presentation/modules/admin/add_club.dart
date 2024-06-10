@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:getsport/data/crud/controller.dart';
+import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/model/club_model.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,14 +15,14 @@ class AddClub extends StatefulWidget {
 }
 
 class _AddClubState extends State<AddClub> {
-  final _key=GlobalKey<FormState>();
-  final emailController=TextEditingController();
-  final clubName=TextEditingController();
-  final password=TextEditingController();
-  final location=TextEditingController();
-  final regIDController=TextEditingController();
+  final _key = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final clubName = TextEditingController();
+  final password = TextEditingController();
+  final location = TextEditingController();
+  final regIDController = TextEditingController();
 
-  XFile ?pickedFile;
+  XFile? pickedFile;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,16 +53,16 @@ class _AddClubState extends State<AddClub> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
                       controller: regIDController,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is required";
-                        }else{
+                        } else {
                           return null;
                         }
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Reg. ID",
@@ -69,16 +71,16 @@ class _AddClubState extends State<AddClub> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
                       controller: emailController,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is required";
-                        }else{
+                        } else {
                           return null;
                         }
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Club Email",
@@ -87,16 +89,16 @@ class _AddClubState extends State<AddClub> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                       controller: clubName,
+                      controller: clubName,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is required";
-                        }else{
+                        } else {
                           return null;
                         }
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Club Name",
@@ -105,16 +107,16 @@ class _AddClubState extends State<AddClub> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                       controller: password,
+                      controller: password,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is required";
-                        }else{
+                        } else {
                           return null;
                         }
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Password",
@@ -127,33 +129,33 @@ class _AddClubState extends State<AddClub> {
                     child: InkWell(
                       onTap: () {
                         Controller().pickImage().then((value) {
-                          pickedFile=value;
-                          setState(() {
-                            
-                          });
+                          pickedFile = value;
+                          setState(() {});
                         });
                       },
-                      child:pickedFile!=null?SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Image.file(File(pickedFile!.path))) :Image.asset(
-                        "assets/image.png",
-                        height: 100,
-                        width: 100,
-                      ),
+                      child: pickedFile != null
+                          ? SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Image.file(File(pickedFile!.path)))
+                          : Image.asset(
+                              "assets/image.png",
+                              height: 100,
+                              width: 100,
+                            ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                       controller: location,
+                      controller: location,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is required";
-                        }else{
+                        } else {
                           return null;
                         }
-                        
                       },
                       decoration: const InputDecoration(
                         hintText: "Location",
@@ -161,16 +163,33 @@ class _AddClubState extends State<AddClub> {
                       ),
                     ),
                   ),
-                 
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        if(_key.currentState!.validate()){
-                          if(pickedFile!=null){
-              
-                          }else{
+                        if (_key.currentState!.validate()) {
+                          if (pickedFile != null) {
+                            DbController()
+                                .uploadImage(pickedFile!, 'Club')
+                                .then((url) {
+                              DbController()
+                                  .createaccount(context, emailController.text,
+                                      password.text)
+                                  .then((value) {
+                                DbController().addNewClub(
+                                    value.user!.uid,
+                                    ClubModel(
+                                      location: location.text,
+                                        regId: regIDController.text,
+                                        clubImage: url,
+                                        email: emailController.text,
+                                        id: value.user!.uid,
+                                        name: clubName.text));
+                                        Navigator.pop(context);
+                              });
+                            });
+                          } else {
                             Helper.errorSnackBar(context, "Pick club image");
                           }
                         }

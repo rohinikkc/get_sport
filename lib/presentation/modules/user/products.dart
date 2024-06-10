@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/presentation/modules/user/prductdet.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class Products extends StatefulWidget {
   const Products({super.key});
@@ -14,7 +19,7 @@ class _ProductsState extends State<Products> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.menu),
+        leading: const Icon(Icons.menu),
         actions: const [
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -35,8 +40,8 @@ class _ProductsState extends State<Products> {
       backgroundColor: Colors.blue.shade900.withOpacity(.6),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 180),
+          const Padding(
+            padding: EdgeInsets.only(right: 180),
             child: Text(
               "Our Products",
               style: TextStyle(
@@ -45,98 +50,86 @@ class _ProductsState extends State<Products> {
                   color: Colors.white),
             ),
           ),
-          
           Expanded(
-            child: ListView.builder(
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return   Row(
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Productdetails()),);
-                      },
-                      child: Container(
-                        height: 250,
-                        width: 160,
-                        decoration: BoxDecoration(
-                          color: Colors.amber.shade50,
-                          borderRadius: BorderRadius.circular(20)
-                        ),
-                        child: Column(
-                          children: [
-                            Image(image: AssetImage("assets/ballf.png")),
-                            Text("VOLATALITY HAND STiTCH FOOTBALL",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500,),),
-                            Row(
-                              children: [
-                                Icon(Icons.currency_rupee),
-                            Text("2000"),
-                             Padding(
-                                padding: const EdgeInsets.only(left: 70),
-                                child: Icon(Icons.favorite_border,color: Colors.blue.shade900,),
-                              )
-                      
-                              ],
-                            ),
-                            ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-               Padding(
-                 padding: const EdgeInsets.only(left: 3,right: 6),
-                 child: Row(
-                             children: [
-                               GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Productdetails())); 
-                                },
-                                 child: Container(
-                                                   height: 250,
-                                                   width: 160,
-                                                   decoration: BoxDecoration(
-                                                     color: Colors.amber.shade50,
-                                                     borderRadius: BorderRadius.circular(20)
-                                                   ),
-                                                   child: Column(
-                                                     children: [
-                                                       Image(
-                                                        
-                                                         image: AssetImage("assets/helmet.png")),
-                                                         Text("Sports youth  Guard Edge Helmet",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),),
-                                                         Row(
-                                                           children: [
-                                                             Icon(Icons.currency_rupee),
-                                                             Text("1500"),
-                                                             Padding(
-                                                               padding: const EdgeInsets.only(left: 70),
-                                                               child: Icon(Icons.favorite_border,color: Colors.blue.shade900,),
-                                                             )
-                                                           ],
-                                                         ),
-                                                         ],
-                                                   ),
-                                 ),
-                               ),
-                             ],
-                           ),
-                           
-               ),
-               
-            ],
-          );
-              },
-           
-            ))
-         
-         
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: DbController().getAllProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    return  Helper.indiacator();
+                    }
+                    List<ProductModel> listOfProducts = snapshot.data!.docs
+                        .map((e) => ProductModel.fromJosn(
+                            e.data() as Map<String, dynamic>))
+                        .toList();
+
+                    if (snapshot.hasData) {
+                      return Helper.emptyListWidget(
+                          listOfProducts,
+                          "No Products",
+                          GridView.builder(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: .7),
+                            itemCount: listOfProducts.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                               Productdetails(model: listOfProducts[index],)),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 250,
+                                    width: 160,
+                                    decoration: BoxDecoration(
+                                        color: Colors.amber.shade50,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 150,
+                                          child: Image.network( 
+                                            fit: BoxFit.cover,
+                                            listOfProducts[index].imageUrl)),
+                                        Text(
+                                          listOfProducts[index].name,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.currency_rupee),
+                                            Text(listOfProducts[index].price.toString()),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(
+                                                      left: 70),
+                                              child: Icon(
+                                                Icons.favorite_border,
+                                                color: Colors
+                                                    .blue.shade900,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ));
+                    } else {
+                      return const SizedBox();
+                    }
+                  }))
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:getsport/data/auth/create_acnt.dart';
+import 'package:getsport/presentation/modules/user/create_acnt.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/model/coach_model.dart';

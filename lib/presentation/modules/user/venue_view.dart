@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:getsport/data/model/event_model.dart';
+import 'package:getsport/data/model/venue_model.dart';
 import 'package:getsport/presentation/modules/user/event_reg_form.dart';
 
-class EventView extends StatefulWidget {
-  EventModel model;
-  EventView({super.key, required this.model});
+class VenueView extends StatefulWidget {
+  VenueModel model;
+
+  VenueView({super.key, required this.model});
 
   @override
-  State<EventView> createState() => _EventViewState();
+  State<VenueView> createState() => _VenueViewState();
 }
 
-class _EventViewState extends State<EventView> {
+class _VenueViewState extends State<VenueView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,8 +144,8 @@ class _EventViewState extends State<EventView> {
 
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EventRegForm(model: widget.model,)));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => Booking()));
 
                 // print('Book Now button pressed');
               },

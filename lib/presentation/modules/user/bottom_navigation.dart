@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/user/academy.dart';
 import 'package:getsport/presentation/modules/trainer/trainer_home.dart';
 import 'package:getsport/presentation/modules/user/homepage.dart';
+import 'package:getsport/presentation/modules/user/products.dart';
 import 'package:getsport/presentation/modules/user/search.dart';
+import 'package:getsport/presentation/modules/user/tab_trainer.dart';
 
 class Navigation extends StatefulWidget {
   int indexnum=0;
@@ -16,9 +18,9 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   final _pages=[
     const HomePage(),
-    const Search(),
+    const Products(),
     const Academy(),
-    const TrainerHome(),
+    const TabTrainerView(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ Widget mynav({
      
       // backgroundColor: Colors.black
       ),
-      BottomNavigationBarItem(icon: Icon(Icons.search,),label:"Search",
+      BottomNavigationBarItem(icon: Icon(Icons.card_travel_outlined,),label:"Products",
       // backgroundColor: Colors.black
       ),
        BottomNavigationBarItem(icon: Icon(Icons.school_sharp,),label:"Academy",

@@ -1,18 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/data/model/product_model.dart';
+import 'package:getsport/presentation/modules/admin/add_event.dart';
 import 'package:getsport/presentation/modules/admin/add_product.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 
-class ProductList extends StatefulWidget {
-  const ProductList({super.key});
+class EventList extends StatefulWidget {
+  const EventList({super.key});
 
   @override
-  State<ProductList> createState() => _ProductListState();
+  State<EventList> createState() => _EventListState();
 }
 
-class _ProductListState extends State<ProductList> {
+class _EventListState extends State<EventList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class _ProductListState extends State<ProductList> {
           backgroundColor:
               const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
           leading: Icon(Icons.arrow_back, color: Colors.blue.shade900),
-          title: const Text("Product List"),
+          title: const Text("Event List"),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -29,7 +32,7 @@ class _ProductListState extends State<ProductList> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const AddProduct()));
+                    builder: (context) => const AddEvent()));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -41,24 +44,27 @@ class _ProductListState extends State<ProductList> {
         backgroundColor:
             const Color.fromARGB(255, 70, 109, 166).withOpacity(.6),
         body: StreamBuilder<QuerySnapshot>(
-            stream: DbController().getAllProducts(),
+            stream: DbController().getAllEvents(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              List<ProductModel> listOfProduct = snapshot.data!.docs
+              List<EventModel> listOfEvents
+               = snapshot.data!.docs
                   .map((e) =>
-                      ProductModel.fromJosn(e.data() as Map<String, dynamic>))
+                      EventModel.fromJson(e.data() as Map<String, dynamic>))
                   .toList();
               if (snapshot.hasData) {
-                return listOfProduct.isEmpty
+                return listOfEvents
+                .isEmpty
                     ? const Center(
-                        child: Text("No Products"),
+                        child: Text("No Events"),
                       )
                     : ListView.builder(
-                        itemCount: listOfProduct.length,
+                        itemCount: listOfEvents
+                        .length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(10),
@@ -71,7 +77,8 @@ class _ProductListState extends State<ProductList> {
                               child: Column(
                                 children: [
                                   Text(
-                                    listOfProduct[index].name,
+                                    listOfEvents
+                                    [index].eventName,
                                     style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -88,7 +95,8 @@ class _ProductListState extends State<ProductList> {
                                           width: 100,
                                           child: Image.network(
                                             fit: BoxFit.cover,
-                                            listOfProduct[index].imageUrl,
+                                            listOfEvents
+                                            [index].imageUrl,
                                             height: 120,
                                             width: 120,
                                           ),
@@ -103,8 +111,9 @@ class _ProductListState extends State<ProductList> {
                                                 color: Colors.white,
                                               ),
                                               Text(
-                                                listOfProduct[index]
-                                                    .price
+                                                "Join fee :${listOfEvents
+                                                [index]
+                                                    .joinfee}"
                                                     .toString(),
                                                 style: const TextStyle(
                                                     color: Colors.white,
@@ -120,24 +129,12 @@ class _ProductListState extends State<ProductList> {
                                           //  Text("Monday- Friday   9:00am-5:00pm",style: TextStyle(fontSize: 12,color: Colors.white),),
                                           Row(
                                             children: [
-                                              ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    _callForEdit(listOfProduct[index]);
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.edit,
-                                                    color: Colors.blue,
-                                                  ),
-                                                  label: const Text("Edit",
-                                                      style: TextStyle(
-                                                          color: Colors.blue))),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
+                                             
                                               ElevatedButton.icon(
                                                   onPressed: () {
 
-                                                    DbController().deleteSelectedDoc("Products", listOfProduct[index].productId);
+                                                    DbController().deleteSelectedDoc("Events", listOfEvents
+                                                    [index].eventId);
                                                   },
                                                   icon: const Icon(
                                                     Icons.delete,
@@ -164,84 +161,4 @@ class _ProductListState extends State<ProductList> {
             }));
   }
 
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController nameController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-
-  _callForEdit(ProductModel model) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            color: Colors.white,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Field is empty";
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: nameController,
-                        decoration: const InputDecoration(
-                            hintText: "Name", border: OutlineInputBorder()),
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Field is empty";
-                          } else {
-                            return null;
-                          }
-                        },
-                        controller: priceController,
-                        decoration: const InputDecoration(
-                            hintText: "Price", border: OutlineInputBorder()),
-                      ),
-                      Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.blueAccent),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 6.0),
-                            child: TextButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  DbController().updateProduct(ProductModel(
-                                    productId: model.productId,
-                                      imageUrl: model.imageUrl,
-                                      name: nameController.text,
-                                      price: double.parse(priceController.text),
-                                      rating: model.rating));
-                                  Helper.successSnackBar(
-                                      context, "Updation Successful");
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: const Text(
-                                "Save",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
 }

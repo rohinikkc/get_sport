@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/admin/ad_academylist.dart';
 import 'package:getsport/presentation/modules/admin/ad_clublist.dart';
-import 'package:getsport/presentation/modules/admin/ad_martialhome.dart';
+import 'package:getsport/presentation/modules/admin/ad_eventlist.dart';
 import 'package:getsport/presentation/modules/admin/ad_menu.dart';
 import 'package:getsport/presentation/modules/admin/ad_productlist.dart';
 import 'package:getsport/presentation/modules/admin/ad_trainerlist.dart';
+import 'package:getsport/presentation/modules/admin/ad_user_list.dart';
+import 'package:getsport/presentation/modules/admin/ad_venues_list.dart';
+import 'package:getsport/presentation/spash_screen.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -18,14 +22,14 @@ class _AdminHomeState extends State<AdminHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 70, 109, 166).withOpacity(.6),
+        backgroundColor: const Color.fromARGB(255, 70, 109, 166).withOpacity(.6),
         leading: Builder(
           builder: (context) {
             return IconButton(
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.menu,
                   color: Colors.white,
                 ));
@@ -38,52 +42,99 @@ class _AdminHomeState extends State<AdminHome> {
             Padding(
               padding: const EdgeInsets.only(top: 40),
               child: ListTile(
-                leading: Icon(Icons.add_box),
+                leading: const Icon(Icons.add_box),
                 iconColor: Colors.white,
-                title: Text(
+                title: const Text(
                   "Academy List",
                   style: TextStyle(color: Colors.white),
                 ),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AcademyList()));
+                      MaterialPageRoute(builder: (context) => const AcademyList()));
                 },
               ),
             ),
             ListTile(
-              leading: Icon(Icons.add_box),
+              leading: const Icon(Icons.add_box),
               iconColor: Colors.white,
-              title: Text(
+              title: const Text(
                 "Coach List",
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TrainerList()));
+                    MaterialPageRoute(builder: (context) => const TrainerList()));
               },
             ),
             ListTile(
-              leading: Icon(Icons.add_box),
+              leading: const Icon(Icons.add_box),
               iconColor: Colors.white,
-              title: Text(
+              title: const Text(
                 "Product List",
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProductList()));
+                    MaterialPageRoute(builder: (context) => const ProductList()));
               },
             ),
             ListTile(
-              leading: Icon(Icons.add_box),
+              leading: const Icon(Icons.add_box),
               iconColor: Colors.white,
-              title: Text(
+              title: const Text(
                 "Club List",
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (contex) => ClubList()));
+                    MaterialPageRoute(builder: (contex) => const ClubList()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_box),
+              iconColor: Colors.white,
+              title: const Text(
+                "Venue List",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => VenuesListPage()));
+              },
+            ),
+             ListTile(
+              leading: const Icon(Icons.add_box),
+              iconColor: Colors.white,
+              title: const Text(
+                "Event List",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const EventList()));
+              },
+            ),
+             ListTile(
+              leading: const Icon(Icons.add_box),
+              iconColor: Colors.white,
+              title: const Text(
+                "Users List",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const UsersList()));
+              },
+            ),
+             ListTile(
+              leading: const Icon(Icons.logout),
+              iconColor: Colors.white,
+              title: const Text(
+                "Logout",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+              Helper.clearPreference(context);
               },
             ),
           ])),
@@ -100,7 +151,7 @@ class _AdminHomeState extends State<AdminHome> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.blueGrey),
-                  child: Center(
+                  child: const Center(
                       child: Text(
                     "Martial Arts",
                     style: TextStyle(
@@ -132,7 +183,7 @@ class _AdminHomeState extends State<AdminHome> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.blueGrey),
-                    child: Center(
+                    child: const Center(
                         child: Text(
                       "Sports",
                       style: TextStyle(

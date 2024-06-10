@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getsport/presentation/modules/admin/ad_home.dart';
+import 'package:getsport/presentation/modules/user/help.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
@@ -81,10 +83,12 @@ class _AdminLoginState extends State<AdminLogin> {
                       onPressed: () {
                         if (emailController.text == _email &&
                             passwordController.text == _password) {
-                          Navigator.push(
-                              context,
+
+                              Helper.setPreference(Helper.ADMINUID);
+                          Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => AdminHome()));
+                                  builder: (context) => const AdminHome()),
+                              (route) => false);
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:getsport/data/auth/login_screen.dart';
+import 'package:getsport/presentation/modules/user/login_screen.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/presentation/modules/user/venueview.dart';
 import 'package:getsport/data/model/usermodel.dart';
@@ -23,7 +23,7 @@ class _Accountstate extends State<Account>
      {
       Controller controller=Controller();
    final usernameController=TextEditingController();
-   final EmailController=TextEditingController();
+   final emailController=TextEditingController();
    final PasswordController=TextEditingController();
    final ConfirmPasswordController=TextEditingController();
    final MobilenNumberController=TextEditingController();
@@ -44,7 +44,7 @@ class _Accountstate extends State<Account>
 Future<void> _register() async {
     if (_formkey.currentState!.validate()) {
       setState(() {
-        Email= EmailController.text;
+        Email= emailController.text;
         Password= PasswordController.text;
       });
 
@@ -62,7 +62,7 @@ Future<void> _register() async {
 
         final userModel = UserModel(
             name: usernameController.text,
-            email: EmailController.text,
+            email: emailController.text,
             phone: MobilenNumberController.text,
             imageUrl: imageUrl,
             id: uid);
@@ -72,14 +72,8 @@ Future<void> _register() async {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration successful')),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Navigation(
-              indexnum: 0,
-            ),
-          ),
-        );
+        
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LoginScreen()));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -153,9 +147,9 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
         child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 25,),
-            Text("Create Account Now!",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25,color:Colors.white),),
-            SizedBox(height: 20,),
+            const SizedBox(height: 25,),
+            const Text("Create Account Now!",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25,color:Colors.white),),
+            const SizedBox(height: 20,),
             
             Padding(
               padding: const EdgeInsets.only(top: 20,bottom: 30),
@@ -164,9 +158,9 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                   radius: 45,
                   backgroundImage: selectedImage!=null?
                   FileImage(selectedImage!):
-                  AssetImage("assets/profile.png")as ImageProvider,
+                  const AssetImage("assets/profile.png")as ImageProvider,
                   child: IconButton(onPressed: _pickImageFromGallery,
-                 icon: Icon(Icons.camera_alt_rounded,color: Colors.black,), ),
+                 icon: const Icon(Icons.camera_alt_rounded,color: Colors.black,), ),
                 ),
               ),
             ),
@@ -177,11 +171,11 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: usernameController,
                 decoration: InputDecoration(fillColor: Colors.white,filled: true,
-                  border:OutlineInputBorder(borderRadius: BorderRadius.circular(12),borderSide: BorderSide(color: Colors.white)),
+                  border:OutlineInputBorder(borderRadius: BorderRadius.circular(12),borderSide: const BorderSide(color: Colors.white)),
                   
                   //  InputBorder.none,
                   hintText: "Name",
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                     color: Colors.grey
                   )
               
@@ -195,7 +189,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                 } ,
                 ),
             ),
-             SizedBox(height: 30,),
+             const SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Container(
@@ -209,8 +203,8 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                   child: TextFormField(
                     
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: EmailController,
-                    decoration: InputDecoration(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "Email",
                       hintStyle: TextStyle(
@@ -235,7 +229,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                 ),
               ),
             ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Container(
@@ -250,7 +244,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: PasswordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "password",
                       hintStyle: TextStyle(
@@ -268,7 +262,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                 ),
               ),
             ), 
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Container(
@@ -283,7 +277,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: ConfirmPasswordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "Confirm Password",
                       hintStyle: TextStyle(
@@ -302,7 +296,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                 ),
               ),
             ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Container(
@@ -316,7 +310,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                   child: TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: MobilenNumberController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: "Mobile Number",
                       hintStyle: TextStyle(
@@ -337,7 +331,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
             const SizedBox(height: 30,),
             Padding(
               padding: const EdgeInsets.all( 30.0),
-              child:isloading? Center(child: CircularProgressIndicator(),):  GestureDetector(
+              child:isloading? const Center(child: CircularProgressIndicator(),):  GestureDetector(
                 onTap: _register,
                 // (){
                 //   if(_formkey.currentState!.validate()) {}
@@ -349,7 +343,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                   
                 // },
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: Colors.deepPurpleAccent,
                     borderRadius: BorderRadius.circular(10)
@@ -360,18 +354,18 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                             ),
               )),
 
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Are yor accound'),
+                  const Text('Are yor accound'),
 
                   TextButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
-                  }, child: Text('loggin',style: TextStyle(color: Colors.blue),))
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),));
+                  }, child: const Text('loggin',style: TextStyle(color: Colors.blue),))
                 ],
               )
           ],
