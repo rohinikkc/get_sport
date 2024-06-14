@@ -17,7 +17,7 @@ class SpashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Helper.clearPreference(context);
-    Future.delayed(Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(seconds: 2)).then((value) {
       Helper.getPreferences().then((credential) async {
         if (credential.isEmpty || credential == null) {
           Navigator.of(context).pushAndRemoveUntil(

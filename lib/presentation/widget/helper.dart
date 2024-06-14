@@ -51,6 +51,7 @@ static  setPreference(value) async {
 static Future  clearPreference(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.remove("UID").then((value) {
+      
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>SpashScreen()), (route) => false);
 
     });

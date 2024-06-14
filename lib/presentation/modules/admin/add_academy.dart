@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getsport/data/crud/controller.dart';
+import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/model/acadamymodel.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -286,7 +287,8 @@ class _AddAcademyState extends State<AddAcademy> {
                                         .collection("Acadamy")
                                         .doc(uid)
                                         .set(acadamyModel.toMap())
-                                        .then((value) {
+                                        .then((value)async {
+                                 await       DbController().saveLocation(locationController.text.trim(),"Acadamy",uid);
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
                                         content: Text("Acadamy Added"),

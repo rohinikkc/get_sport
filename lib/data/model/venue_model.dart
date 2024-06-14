@@ -6,7 +6,7 @@ class VenueModel {
   double price;
   String? venueID;
   String description;
-
+String sponserId;
   VenueModel(
       {required this.price,
       required this.description,
@@ -14,6 +14,7 @@ class VenueModel {
       required this.location,
       required this.timing,
        this.venueID,
+       required this.sponserId,
       required this.venueName});
 
   Map<String, dynamic> toJson(id) => {
@@ -23,11 +24,12 @@ class VenueModel {
         "location": location,
         "timing": timing,
         "price": price,
-        "venueID": id
+        "venueID": id,"sponserId":sponserId
       };
 
   factory VenueModel.fromJosn(Map<String, dynamic> json) {
     return VenueModel(
+      sponserId:json["sponserId"],
         price: json["price"],
         description: json["description"],
         imageUrl: json["imageUrl"],

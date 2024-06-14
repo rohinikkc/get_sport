@@ -34,16 +34,16 @@ class _ClubMenuState extends State<ClubMenu> {
             },
            ),
             
-            ListTile(
-            leading: Icon(Icons.notification_add_outlined),
-            iconColor: Colors.white,
-            title: Text("Notification",style: TextStyle(color: Colors.white),
-            ),
-            onTap: (){
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>ClubNotification()));
+          //   ListTile(
+          //   leading: Icon(Icons.notification_add_outlined),
+          //   iconColor: Colors.white,
+          //   title: Text("Notification",style: TextStyle(color: Colors.white),
+          //   ),
+          //   onTap: (){
+          //                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ClubNotification()));
  
-            },
-           ),
+          //   },
+          //  ),
            
            ListTile(
             leading: Icon(Icons.logout_outlined),

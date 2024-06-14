@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/presentation/modules/admin/ad_home.dart';
 import 'package:getsport/presentation/modules/user/help.dart';
 import 'package:getsport/presentation/widget/helper.dart';
@@ -83,7 +85,7 @@ class _AdminLoginState extends State<AdminLogin> {
                       onPressed: () {
                         if (emailController.text == _email &&
                             passwordController.text == _password) {
-
+FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
                               Helper.setPreference(Helper.ADMINUID);
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(

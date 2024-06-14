@@ -28,7 +28,7 @@ class VenuesListPage extends StatelessWidget {
             IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AddVenue()));
+                    MaterialPageRoute(builder: (context) =>  AddVenue(currentUserID: Helper.ADMINUID,)));
               },
               icon: Icon(Icons.add, color: Colors.blue.shade900),
             )
@@ -268,6 +268,7 @@ class VenuesListPage extends StatelessWidget {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   DbController().updateVenue(VenueModel(
+                                    sponserId:model.sponserId ,
                                       price: double.parse(priceController.text),
                                       description: description.text,
                                       imageUrl: model.imageUrl,

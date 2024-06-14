@@ -70,17 +70,16 @@ class _ClubHomepageState extends State<ClubHomepage> {
                         height: 30,
 
                        ),
-                        ElevatedButton.icon(
-                        onPressed: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=>const ClubRegister()));
+                      //   ElevatedButton.icon(
+                      //   onPressed: (){
 
-                        }, 
-                       icon: Icon(Icons.app_registration_outlined,color: Colors.blue.shade900,), 
-                       label:const Text("Registration List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
-                                              const SizedBox(
-                        height: 30,
+                      //   }, 
+                      //  icon: Icon(Icons.app_registration_outlined,color: Colors.blue.shade900,), 
+                      //  label:const Text("Registration List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
+                      //                         const SizedBox(
+                      //   height: 30,
 
-                       ),
+                      //  ),
                         
                     ],
                   ),

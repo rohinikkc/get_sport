@@ -8,7 +8,8 @@ import 'package:getsport/presentation/widget/helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddVenue extends StatefulWidget {
-  const AddVenue({super.key});
+  String currentUserID;
+   AddVenue({super.key,required this.currentUserID});
 
   @override
   State<AddVenue> createState() => _AddVenueState();
@@ -171,7 +172,9 @@ final _formKey=GlobalKey<FormState>();
                         if(_formKey.currentState!.validate()){
                           if(imagefile!=null){
                             DbController().uploadImage(imagefile!, "Venue").then((value) {
-                              DbController().addNewVenue(VenueModel(price: double.parse(price.text), description: description.text, imageUrl: value, location: location.text, timing: timing.text, venueName: name.text)).then((value) {
+                              DbController().addNewVenue(VenueModel(
+                                sponserId:widget.currentUserID ,
+                                price: double.parse(price.text), description: description.text, imageUrl: value, location: location.text, timing: timing.text, venueName: name.text)).then((value) {
                                 Navigator.pop(context);
                                 Helper.successSnackBar(context, "Venue added successful");
                               });

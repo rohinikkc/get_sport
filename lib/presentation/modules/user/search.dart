@@ -6,6 +6,7 @@ import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/data/model/venue_model.dart';
 import 'package:getsport/presentation/modules/user/event.dart';
 import 'package:getsport/presentation/modules/user/eventview.dart';
+import 'package:getsport/presentation/modules/user/map.dart';
 import 'package:getsport/presentation/modules/user/menubar.dart';
 import 'package:getsport/presentation/modules/user/venue.dart';
 import 'package:getsport/presentation/modules/user/venue_view.dart';
@@ -54,7 +55,10 @@ class _SearchState extends State<Search> {
             ),
             actions: [
               IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.location_on))
+              IconButton(onPressed: () {
+Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MapPage()));
+
+              }, icon: const Icon(Icons.location_on))
             ],
             backgroundColor:
                 const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),

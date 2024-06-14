@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/presentation/modules/admin/add_event.dart';
+import 'package:getsport/presentation/modules/club/club_register.dart';
 
 class ClubTournament extends StatefulWidget {
   const ClubTournament({super.key});
@@ -21,10 +22,10 @@ class _ClubTournamentState extends State<ClubTournament> {
           leading: Icon(Icons.arrow_back, color: Colors.blue.shade900),
           title: const Text("TournamentList"),
           actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.search, color: Colors.blue.shade900),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Icon(Icons.search, color: Colors.blue.shade900),
+            // ),
             IconButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -36,7 +37,7 @@ class _ClubTournamentState extends State<ClubTournament> {
         backgroundColor:
             const Color.fromARGB(255, 70, 109, 166).withOpacity(.6),
         body: StreamBuilder<QuerySnapshot>(
-            stream: DbController().fetchCurrentClubEvents(),
+            stream: DbController().fetchCurrentModuleEvents(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -142,7 +143,26 @@ class _ClubTournamentState extends State<ClubTournament> {
                                                     label: const Text("Delete",
                                                         style: TextStyle(
                                                             color:
-                                                                Colors.blue)))
+                                                                Colors.blue))),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ClubRegister(
+                                                                  eventId: listOfEvents[
+                                                                          index]
+                                                                      .eventId!,
+                                                                )));
+                                                  },
+                                                  child: Text("Resitesration",
+                                                      style: TextStyle(
+                                                          color: Colors.blue)),
+                                                )
                                               ],
                                             ),
                                           ),

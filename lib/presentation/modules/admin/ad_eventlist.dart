@@ -6,6 +6,7 @@ import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/presentation/modules/admin/add_event.dart';
 import 'package:getsport/presentation/modules/admin/add_product.dart';
+import 'package:getsport/presentation/modules/club/club_register.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 
 class EventList extends StatefulWidget {
@@ -142,7 +143,25 @@ class _EventListState extends State<EventList> {
                                                   ),
                                                   label: const Text("Delete",
                                                       style: TextStyle(
-                                                          color: Colors.blue)))
+                                                          color: Colors.blue))),
+
+                                                          SizedBox(width: 20,),
+                                                           ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ClubRegister(
+                                                                  eventId: listOfEvents[
+                                                                          index]
+                                                                      .eventId!,
+                                                                )));
+                                                  },
+                                                  child: Text("Resitesration",
+                                                      style: TextStyle(
+                                                          color: Colors.blue)),
+                                                )
                                             ],
                                           ),
                                         ],
