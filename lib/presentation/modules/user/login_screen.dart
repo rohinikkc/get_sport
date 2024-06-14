@@ -8,7 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:getsport/presentation/modules/academy/academy_home.dart';
 import 'package:getsport/presentation/modules/admin/admin_login.dart';
 import 'package:getsport/presentation/modules/club/club_home.dart';
-import 'package:getsport/presentation/modules/trainer/trainer_home.dart';
+
+import 'package:getsport/presentation/modules/trainer/trainerhome.dart';
 import 'package:getsport/presentation/modules/user/create_acnt.dart';
 import 'package:getsport/presentation/modules/user/event.dart';
 import 'package:getsport/presentation/modules/user/bottom_navigation.dart';

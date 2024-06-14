@@ -29,7 +29,7 @@ class _EventViewState extends State<EventView> {
             Column(
               children: [
                 Text(
-                  "DIEGO FOOTBALL TOURNAMENT",
+                  widget.model.eventName.toUpperCase(),
                   style: TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class _EventViewState extends State<EventView> {
                 Row(
                   children: [
                     Icon(Icons.schedule, color: Colors.blue),
-                    Text("9:30am-7:30pm",
+                    Text(widget.model.timig,
                         style: TextStyle(color: Colors.black.withOpacity(0.8))),
                   ],
                 ),

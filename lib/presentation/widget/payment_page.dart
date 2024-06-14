@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:booking_calendar/booking_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:getsport/data/booking_controller.dart';
 import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/buy_product_model.dart';
@@ -9,6 +11,7 @@ import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/data/model/regis_event_model.dart';
 import 'package:getsport/data/payment_controller.dart';
 import 'package:getsport/presentation/modules/user/bottom_navigation.dart';
+import 'package:getsport/presentation/modules/user/homepage.dart';
 import 'package:getsport/presentation/modules/user/orderconfirmed.dart';
 import 'package:getsport/presentation/modules/user/product_buy.dart';
 import 'package:getsport/presentation/widget/helper.dart';
@@ -21,11 +24,13 @@ class PaymentPage extends StatefulWidget {
   RegEventModel ?regEventModel;//only for registration evebts
   String ?eventId;//only for events registration
   double amount;
+  BookingService ?bookingService;//only for book venue
   PaymentPage(
       {super.key,
        this.eventId,
       this.regEventModel,
        this.buyProductModel ,
+       this.bookingService,
       required this.amount,
     });
 
@@ -102,7 +107,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           .initiateTransaction(context,
                               app: snapshot.data![index],
                               receiverUpiId: Helper.recieverUPIID,
-                              receiverName: "Weigh Master",
+                              receiverName: "Getsport",
                               amount: widget.amount)
                           .then((value) async {
                       
@@ -115,6 +120,12 @@ class _PaymentPageState extends State<PaymentPage> {
                       DbController().registerAnEvent(widget.eventId, widget.regEventModel!);
                       Helper.successSnackBar(context, "Event Registration succesful");
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (conetxt)=>Navigation(indexnum: 0)), (route) => false);
+                     }
+                     if(widget.bookingService!=null){
+                      BookingController().bookNewSchedule(widget.bookingService!).then((value) {
+                        Helper.successSnackBar(context, "Booking Successful!");
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+                      });
                      }
 ;                       
                         log("Error");

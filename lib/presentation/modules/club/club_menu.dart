@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/club/club.notification.dart';
 import 'package:getsport/presentation/modules/club/club_account.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class ClubMenu extends StatefulWidget {
   const ClubMenu({super.key});
@@ -12,8 +13,7 @@ class ClubMenu extends StatefulWidget {
 class _ClubMenuState extends State<ClubMenu> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-             drawer: Drawer(
+    return  Drawer(
         backgroundColor: Colors.blue.shade900,
          child: ListView(
           children: [UserAccountsDrawerHeader(
@@ -50,12 +50,14 @@ class _ClubMenuState extends State<ClubMenu> {
             iconColor: Colors.white,
             title: Text("logout",style: TextStyle(color: Colors.white),
             ),
-            onTap: (){},
+            onTap: (){
+                            Helper.clearPreference(context);
+
+
+            },
            ),
            ],
          ),
-      ),
-
-    );
+      );
   }
 }

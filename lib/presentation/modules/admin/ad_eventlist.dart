@@ -32,7 +32,7 @@ class _EventListState extends State<EventList> {
             InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const AddEvent()));
+                    builder: (context) =>  AddEvent(hosterType: "GetSport",)));
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

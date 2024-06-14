@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/data/model/venue_model.dart';
 import 'package:getsport/presentation/modules/user/event_reg_form.dart';
+import 'package:getsport/presentation/modules/user/page_slote_booking.dart';
 
 class VenueView extends StatefulWidget {
   VenueModel model;
@@ -12,6 +13,9 @@ class VenueView extends StatefulWidget {
 }
 
 class _VenueViewState extends State<VenueView> {
+  final nameController=TextEditingController();
+  final emailController=TextEditingController();
+  final _formKey=GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +33,7 @@ class _VenueViewState extends State<VenueView> {
 
             Column(
               children: [
-                Text(
+                const Text(
                   "DIEGO FOOTBALL TOURNAMENT",
                   style: TextStyle(
                       fontSize: 19,
@@ -38,17 +42,17 @@ class _VenueViewState extends State<VenueView> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.schedule, color: Colors.blue),
+                    const Icon(Icons.schedule, color: Colors.blue),
                     Text("9:30am-7:30pm",
                         style: TextStyle(color: Colors.black.withOpacity(0.8))),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on_outlined,
                       color: Colors.blue,
                     ),
@@ -58,7 +62,7 @@ class _VenueViewState extends State<VenueView> {
                     )
                   ],
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(right: 160, top: 20),
                   child: Text(
                     'Available Sports:',
@@ -68,7 +72,7 @@ class _VenueViewState extends State<VenueView> {
               ],
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +82,7 @@ class _VenueViewState extends State<VenueView> {
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             const Row(
               children: [
@@ -138,21 +142,67 @@ class _VenueViewState extends State<VenueView> {
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             ElevatedButton(
               onPressed: () {
+
+                showDialog(context: context, builder: (context)=>AlertDialog(
+
+                  title: Form(
+                    key: _formKey,
+                    child: Column(children: [
+                      TextFormField(
+                        controller: nameController,
+                        validator: (value) {
+                          if(value!.isEmpty){
+                           return "Field is required";
+                          }else{
+                            return  null;
+                          }
+                        },
+                        decoration: const InputDecoration(hintText: "Name"),
+                        
+                      ),
+                      const SizedBox(height: 20,),
+                       TextFormField(
+                        controller: emailController,
+                        validator: (value) {
+                          if(value!.isEmpty){
+                           return "Field is required";
+                          }else{
+                            return  null;
+                          }
+                        },
+                        decoration: const InputDecoration(hintText: "Email"),
+                        
+                      ),
+                      const SizedBox(height: 30,),
+                    
+                      ElevatedButton(onPressed: (){
+                    if(_formKey.currentState!.validate()){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>SlotePackagePage(
+                        amount: widget.model.price,
+                        
+                        venueName: widget.model.venueName, venueID: widget.model.venueID!, email: emailController.text, name: nameController.text) ),);
+                    }
+                    
+                      }, child: const Text("Book Now"))
+                    ],),
+                  ),
+                ));
+
                 // Navigator.push(context,
                 //     MaterialPageRoute(builder: (context) => Booking()));
 
                 // print('Book Now button pressed');
               },
-              child: Text('BOOK NOW'),
+              child: const Text('BOOK NOW'),
               style: ElevatedButton.styleFrom(
                 // color: Colors.deepPurpleAccent,
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
             ),
           ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class TrainerMenu extends StatelessWidget {
   const TrainerMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
+    return Drawer(
         backgroundColor: Colors.blue.shade900,
          child: ListView(
           children: [UserAccountsDrawerHeader(
@@ -44,11 +44,13 @@ class TrainerMenu extends StatelessWidget {
             iconColor: Colors.white,
             title: Text("logout",style: TextStyle(color: Colors.white),
             ),
-            onTap: (){},
+            onTap: (){
+                            Helper.clearPreference(context);
+
+            },
            ),
            ],
          ),
-      ),
-    );
+      );
   }
 }

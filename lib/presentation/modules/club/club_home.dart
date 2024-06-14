@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/club/club_home2.dart';
+import 'package:getsport/presentation/modules/club/club_menu.dart';
 
 class ClubHome extends StatefulWidget {
   const ClubHome({super.key});
@@ -12,6 +13,7 @@ class _ClubHomeState extends State<ClubHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: ClubMenu(),
                             backgroundColor:const Color.fromARGB(255, 70, 109, 166).withOpacity(.6) ,
              body:
               Padding(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class AcademyMenu extends StatefulWidget {
   const AcademyMenu({super.key});
@@ -10,8 +11,7 @@ class AcademyMenu extends StatefulWidget {
 class _AcademyMenuState extends State<AcademyMenu> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       drawer: Drawer(
+    return Drawer(
         backgroundColor: Colors.blue.shade900,
          child: ListView(
           children: [UserAccountsDrawerHeader(
@@ -42,11 +42,12 @@ class _AcademyMenuState extends State<AcademyMenu> {
             iconColor: Colors.white,
             title: Text("logout",style: TextStyle(color: Colors.white),
             ),
-            onTap: (){},
+            onTap: (){
+              Helper.clearPreference(context);
+            },
            ),
            ],
          ),
-      ),
-    );
+      );
   }
 }

@@ -83,6 +83,12 @@ class DbController {
     db.collection("Clubs").doc(clunModel.id).update(clunModel.toJosn());
   }
 
+  Stream <QuerySnapshot>fetchCurrentClubEvents(){
+        return db.collection("Events").where("hosterId",isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots();
+
+
+  }
+
 //......................................PRODUCT
 
   addNewProduct(ProductModel productModel) async {

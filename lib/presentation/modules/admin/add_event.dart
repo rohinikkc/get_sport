@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/data/db_controller.dart';
@@ -8,7 +10,8 @@ import 'package:getsport/presentation/widget/helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddEvent extends StatefulWidget {
-  const AddEvent({super.key});
+  String hosterType;
+   AddEvent({super.key,required this.hosterType});
 
   @override
   State<AddEvent> createState() => _AddEventState();
@@ -157,7 +160,8 @@ class _AddEventState extends State<AddEvent> {
                                 .then((url) {
                               DbController()
                                   .addEvents(EventModel(
-                                    eventHoster: "HopeHub",
+                                    hosterId: FirebaseAuth.instance.currentUser!.uid,
+                                    eventHoster: widget.hosterType,
                                       joinfee: joinFee.text,
                                       eventName: eventname.text,
                                       imageUrl: url,

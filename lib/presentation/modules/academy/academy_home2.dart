@@ -15,14 +15,19 @@ class _AcademyHomepageState extends State<AcademyHomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AcademyMenu(),
             appBar: AppBar(
          backgroundColor:
             const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
         leading: 
         // Icon(Icons.menu,color: Colors.blue.shade900),
-        IconButton(onPressed: (){
-          Navigator.push(context,MaterialPageRoute(builder: (context)=>AcademyMenu()) );
-        }, icon:Icon(Icons.menu,color: Colors.blue.shade900) ),
+        Builder(
+          builder: (context) {
+            return IconButton(onPressed: (){
+              Scaffold.of(context).openDrawer();
+            }, icon:Icon(Icons.menu,color: Colors.blue.shade900) );
+          }
+        ),
         
         actions: [
        Padding(
@@ -78,7 +83,7 @@ class _AcademyHomepageState extends State<AcademyHomepage> {
                        ),
                         ElevatedButton.icon(
                         onPressed: (){
-                          //  Navigator.push(context, MaterialPageRoute(builder: (context)=>AcademyVenuelist()));
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>AcademyVenuelist()));
                           // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const AcademyTournament()));
                         }, 
                        icon: Icon(Icons.sports_basketball_sharp,color: Colors.blue.shade900,), 

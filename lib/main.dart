@@ -1,7 +1,16 @@
  
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:getsport/data/booking_controller.dart';
+import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/payment_controller.dart';
+import 'package:getsport/presentation/modules/academy/academy_account.dart';
+import 'package:getsport/presentation/modules/academy/academy_home.dart';
+import 'package:getsport/presentation/modules/academy/details_editpage.dart';
+import 'package:getsport/presentation/modules/club/club_home.dart';
+
+import 'package:getsport/presentation/modules/trainer/trainerhome.dart';
 import 'package:getsport/presentation/modules/user/login_screen.dart';
 import 'package:getsport/logic/firebase_options.dart';
 import 'package:getsport/presentation/spash_screen.dart';
@@ -27,7 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider<PaymentController>(create: (_)=>PaymentController())
+          ChangeNotifierProvider<PaymentController>(create: (_)=>PaymentController()),
+          ChangeNotifierProvider<BookingController>(create: (_)=>BookingController())
+          ,ChangeNotifierProvider<DBFunctions>(create: (_)=>DBFunctions())
         ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -39,7 +50,10 @@ class MyApp extends StatelessWidget {
         ),
         
          home: SpashScreen (),
-         
+        // home: TrainerHome()
+        //  home: AcademyAccount(),
+        // home: DetailsEdit(),
+        // home: ClubHome(),
          ),
     );
   }

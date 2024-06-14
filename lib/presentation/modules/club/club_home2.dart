@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getsport/presentation/modules/club/club_menu.dart';
 import 'package:getsport/presentation/modules/club/club_register.dart';
 import 'package:getsport/presentation/modules/club/club_tournment.dart';
 
@@ -13,14 +14,20 @@ class _ClubHomepageState extends State<ClubHomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const ClubMenu(),
                   appBar: AppBar(
          backgroundColor:
             const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
         leading: 
         // Icon(Icons.menu,color: Colors.blue.shade900),
-        IconButton(onPressed: (){
-          // Navigator.push(context,MaterialPageRoute(builder: (context)=>AcademyMenu()) );
-        }, icon:Icon(Icons.menu,color: Colors.blue.shade900) ),
+        Builder(
+          builder: (context) {
+            return IconButton(onPressed: (){
+              Scaffold.of(context).openDrawer();
+              // Navigator.push(context,MaterialPageRoute(builder: (context)=>AcademyMenu()) );
+            }, icon:Icon(Icons.menu,color: Colors.blue.shade900) );
+          }
+        ),
         
         actions: [
        Padding(
@@ -33,8 +40,8 @@ class _ClubHomepageState extends State<ClubHomepage> {
         body: Column(
           children: [
 
-            Padding(
-              padding: const EdgeInsets.only(right:200,top: 60),
+            const Padding(
+              padding: EdgeInsets.only(right:200,top: 60),
               child: Text("REAL MADRID CLUB",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 15),),
             ),
             Container(
@@ -53,13 +60,13 @@ class _ClubHomepageState extends State<ClubHomepage> {
                     children: [
                        ElevatedButton.icon(
                         onPressed: (){
-                             Navigator.push(context, MaterialPageRoute(builder: (context)=>ClubTournament()));
+                             Navigator.push(context, MaterialPageRoute(builder: (context)=>const ClubTournament()));
 
                         }, 
                        icon: Icon(Icons.run_circle,color: Colors.blue.shade900,), 
-                       label:Text("Tournaments List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
+                       label:const Text("Tournaments List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
 
-                       SizedBox(
+                       const SizedBox(
                         height: 30,
 
                        ),
@@ -69,8 +76,8 @@ class _ClubHomepageState extends State<ClubHomepage> {
 
                         }, 
                        icon: Icon(Icons.app_registration_outlined,color: Colors.blue.shade900,), 
-                       label:Text("Registration List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
-                                              SizedBox(
+                       label:const Text("Registration List",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),), ),
+                                              const SizedBox(
                         height: 30,
 
                        ),

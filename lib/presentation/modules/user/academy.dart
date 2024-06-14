@@ -28,83 +28,82 @@ class Academy extends StatelessWidget {
             const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
       ),
       backgroundColor: Colors.blue.shade900.withOpacity(.6),
-      body: Expanded(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: DbController().getAllAcademy(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Helper.indiacator();
-                }
-                List<AcadamyModel> listOfAcademy = [];
-                listOfAcademy = snapshot.data!.docs
-                    .map((e) =>
-                        AcadamyModel.fromMap(e.data() as Map<String, dynamic>))
-                    .toList();
-                if (snapshot.hasData) {
-                  return Helper.emptyListWidget(
-                      listOfAcademy,
-                      "No Academy",
-                      ListView.builder(
-                          itemCount: listOfAcademy.length,
-                          itemBuilder: (context, index) {
-                            return Row(children: [
-                              SizedBox(
-                                  height: 200,
-                                  width: 150,
-                                  child: Image.network(
-                                      fit: BoxFit.cover,
-                                      listOfAcademy[index].image!)),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 170),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      listOfAcademy[index]
-                                          .acadamyName
-                                          .toString(),
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 70),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on,
+      body: StreamBuilder<QuerySnapshot>(
+          stream: DbController().getAllAcademy(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Helper.indiacator();
+            }
+            List<AcadamyModel> listOfAcademy = [];
+            listOfAcademy = snapshot.data!.docs
+                .map((e) =>
+                    AcadamyModel.fromMap(e.data() as Map<String, dynamic>))
+                .toList();
+            if (snapshot.hasData) {
+              return Helper.emptyListWidget(
+                  listOfAcademy,
+                  "No Academy",
+                  ListView.builder(
+                      itemCount: listOfAcademy.length,
+                      itemBuilder: (context, index) {
+                        return Row(children: [
+                          SizedBox(
+                              height: 200,
+                              width: 150,
+                              child: Image.network(
+                                  fit: BoxFit.cover,
+                                  listOfAcademy[index].image!)),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 170),
+                            child: Column(
+                              children: [
+                                Text(
+                                  listOfAcademy[index]
+                                      .acadamyName
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 70),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        listOfAcademy[index].location!,
+                                        style: const TextStyle(
                                             color: Colors.white,
-                                          ),
-                                          Text(
-                                            listOfAcademy[index].location!,
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
-                                          ),
-                                        ],
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20)),
+                                        color: Colors.blue,
                                       ),
                                     ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20)),
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                      ],
-                                    )
                                   ],
-                                ),
-                              )
-                            ]);
-                          }));
-                } else {
-                  return const SizedBox();
-                }
-              })),
+                                )
+                              ],
+                            ),
+                          )
+                        ]);
+                      }));
+            } else {
+              return const SizedBox();
+            }
+          }),
 
       // Text(
       //   'Feathrall Coaching Classes',

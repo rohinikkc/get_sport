@@ -6,10 +6,12 @@ class EventModel {
   String imageUrl;
   String joinfee;
   String eventHoster;
+  String hosterId;
 
   EventModel(
       {required this.joinfee,
       this.eventId,
+      required this.hosterId,
       required this.eventHoster,
       required this.eventName,
       required this.imageUrl,
@@ -18,6 +20,7 @@ class EventModel {
 
   Map<String, dynamic> toJson(id) => {
         "eventId": id,
+        "hosterId":hosterId,
         "eventHoster":eventHoster,
         "joinfee": joinfee,
         "eventName": eventName,
@@ -28,6 +31,7 @@ class EventModel {
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
+      hosterId:json["hosterId"],
       eventHoster:json["eventHoster"],
         joinfee: json["joinfee"],
         eventId: json["eventId"],

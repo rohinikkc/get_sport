@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/user/academy.dart';
-import 'package:getsport/presentation/modules/trainer/trainer_home.dart';
+// import 'package:getsport/presentation/modules/trainer/trainer_home.dart';
 import 'package:getsport/presentation/modules/user/homepage.dart';
 import 'package:getsport/presentation/modules/user/products.dart';
 import 'package:getsport/presentation/modules/user/search.dart';

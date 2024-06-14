@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/academy/academy_home.dart';
 import 'package:getsport/presentation/modules/club/club_home.dart';
-import 'package:getsport/presentation/modules/trainer/trainer_home.dart';
+
+import 'package:getsport/presentation/modules/trainer/trainerhome.dart';
 import 'package:getsport/presentation/modules/user/bottom_navigation.dart';
 import 'package:getsport/presentation/modules/user/login_screen.dart';
 import 'package:getsport/presentation/modules/admin/ad_home.dart';

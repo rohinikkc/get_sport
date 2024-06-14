@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getsport/presentation/modules/trainer/trainermenu.dart';
 
-class TrainerHome extends StatefulWidget {
-  const TrainerHome({super.key});
+class MsgSend extends StatelessWidget {
+  const MsgSend({super.key});
 
-  @override
-  State<TrainerHome> createState() => _TrainerHomeState();
-}
-
-class _TrainerHomeState extends State<TrainerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
