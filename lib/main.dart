@@ -9,6 +9,7 @@ import 'package:getsport/presentation/modules/academy/academy_account.dart';
 import 'package:getsport/presentation/modules/academy/academy_home.dart';
 import 'package:getsport/presentation/modules/academy/details_editpage.dart';
 import 'package:getsport/presentation/modules/club/club_home.dart';
+import 'package:getsport/presentation/modules/trainer/personal_detailpage.dart';
 
 import 'package:getsport/presentation/modules/trainer/trainerhome.dart';
 import 'package:getsport/presentation/modules/user/login_screen.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         //  home: AcademyAccount(),
         // home: DetailsEdit(),
         // home: ClubHome(),
+        //  home: PersonalDetail(),
          ),
     );
   }

@@ -17,7 +17,7 @@ class PaymentController with ChangeNotifier {
         .then((value) {
       return apps = value;
     }).catchError((e) {
-      return apps = [];
+      return apps = []; 
     });
   }
 

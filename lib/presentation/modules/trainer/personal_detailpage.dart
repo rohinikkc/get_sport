@@ -16,7 +16,7 @@ class _PersonalDetailState extends State<PersonalDetail> {
         leading: 
         
         IconButton(onPressed: (){
-          // Navigator.pop(context);
+          Navigator.pop(context);
         }, icon:Icon(Icons.arrow_back), ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

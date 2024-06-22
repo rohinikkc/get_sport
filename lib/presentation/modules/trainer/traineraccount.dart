@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getsport/presentation/modules/trainer/personal_detailpage.dart';
 
 class TrainerAccount extends StatefulWidget {
   const TrainerAccount({super.key});
@@ -46,8 +47,13 @@ class _TrainerAccountState extends State<TrainerAccount> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 100),
-                    child: Text("Edit",style: TextStyle(color: Colors.blue
-                    ),
+                    child: TextButton(
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonalDetail()));
+                      },
+                      child: Text("Edit",style: TextStyle(color: Colors.blue
+                      ),
+                      ),
                     ),
                     
                     

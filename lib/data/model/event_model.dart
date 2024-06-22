@@ -7,6 +7,7 @@ class EventModel {
   String joinfee;
   String eventHoster;
   String hosterId;
+  
 
   EventModel(
       {required this.joinfee,

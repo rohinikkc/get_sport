@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -75,7 +76,7 @@ class DbController {
 
   addNewClub(id, ClubModel clubmodel) async {
     db.collection("Clubs").doc(id).set(clubmodel.toJosn());
-    saveLocation(clubmodel.location, "Club",id);
+    saveLocation(clubmodel.location, "Club", id);
   }
 
   getAllClubs() {
@@ -128,7 +129,7 @@ class DbController {
     final docs = db.collection("Venues").doc();
 
     docs.set(venueModel.toJson(docs.id));
-    saveLocation(venueModel.location, "Venue",docs.id);
+    saveLocation(venueModel.location, "Venue", docs.id);
   }
 
   updateVenue(VenueModel venueModel) {
@@ -147,7 +148,7 @@ class DbController {
   Future addEvents(EventModel eventModel) async {
     final docs = db.collection("Events").doc();
     docs.set(eventModel.toJson(docs.id));
-    saveLocation(eventModel.location, "Event",docs.id);
+    saveLocation(eventModel.location, "Event", docs.id);
   }
 
   registerAnEvent(id, RegEventModel regEventModel) {
@@ -183,24 +184,65 @@ class DbController {
   }
 
 
-  saveLocation(location,type,itemid)async{
-  
- locationFromAddress(location).then((value) {
-  final data=value[0];
-  final lat=data.latitude;
-  final lon=data.longitude;
-LocationModel model=LocationModel(
-  itemID:itemid,
-  lat: lat, location: location, lon: lon, type: type);
-final doc=  db.collection("location").doc();
-doc.set(model.toJson(doc.id));
 
-});
+  saveLocation(location, type, itemid) async {
+    locationFromAddress(location).then((value) {
+      final data = value[0];
+      final lat = data.latitude;
+      final lon = data.longitude;
+      LocationModel model = LocationModel(
+          itemID: itemid, lat: lat, location: location, lon: lon, type: type);
+      final doc = db.collection("location").doc();
+      doc.set(model.toJson(doc.id));
+    });
+  }
 
+  Future<QuerySnapshot> getAllLocation() async {
+    return db.collection("location").get();
+  }
+
+  addToWishList(productId)async {
+    log(FirebaseAuth.instance.currentUser!.uid);
+    log(productId);
+  final doc=  db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Wish List")
+        .doc(productId);
+  await   doc.get().then((snapshot) {
+     if(!snapshot.exists){
+      doc .set({"id": productId});log("exist");
+    }else{
+      doc.delete();
+      log("!exist");
+    }
+
+    });
+
+
+   
+  }
+
+Stream<DocumentSnapshot> checkTheProductIsAleradyExistInWishList(productId){
+   return   db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Wish List")
+        .doc(productId).snapshots();
+
+      
 
   }
 
- Future<QuerySnapshot> getAllLocation()async{
- return   db.collection("location").get();
+ Future<QuerySnapshot> getMyWishList(){
+    return   db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Wish List").get();
+
+  }
+
+ Future<DocumentSnapshot> getSelectedProductData(id)async{
+   return await db.collection("Products").doc(id).get();
   }
 }

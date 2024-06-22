@@ -6,6 +6,7 @@ import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/presentation/modules/user/prductdet.dart';
+import 'package:getsport/presentation/modules/user/wishlist.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 import 'package:provider/provider.dart';
 
@@ -36,10 +37,14 @@ class _ProductsState extends State<Products> {
           }
         ),
         leading: const Icon(Icons.menu),
-        actions: const [
+        actions:  [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.favorite),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>WishList()));
+              },
+              child: Icon(Icons.favorite)),
           )
         ],
         backgroundColor:
@@ -129,12 +134,34 @@ class _ProductsState extends State<Products> {
                                                 Text(listOfProducts[index]
                                                     .price
                                                     .toString()),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 70),
-                                                  child: Icon(
-                                                    Icons.favorite_border,
-                                                    color: Colors.blue.shade900,
+                                                IconButton(
+                                                  onPressed: (){
+                                                    DbController().addToWishList(listOfProducts[index].productId);
+                                                  },
+                                                  icon: StreamBuilder<DocumentSnapshot>(
+                                                    stream: DbController().checkTheProductIsAleradyExistInWishList(listOfProducts[index].productId),
+                                                  
+                                                    builder: (context, snapshot) {
+                                                      if(snapshot.connectionState==ConnectionState.waiting){
+                                                        return Icon(
+                                                        Icons.favorite_border,
+                                                        color: Colors.blue.shade900,
+                                                      );
+                                                
+                                                    
+                                                      }
+                                                
+                                                      bool isLiked;
+                                                      if(snapshot.data!.exists){
+                                                      isLiked=true;
+                                                      }else{
+                                                        isLiked=false;
+                                                      }
+                                                      return Icon(
+                                                      isLiked?Icons.favorite:  Icons.favorite_border,
+                                                        color: Colors.blue.shade900,
+                                                      );
+                                                    }
                                                   ),
                                                 )
                                               ],

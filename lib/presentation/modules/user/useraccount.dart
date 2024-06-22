@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getsport/presentation/modules/trainer/personal_detailpage.dart';
 
 class UserAccount extends StatefulWidget {
   const UserAccount({super.key});
@@ -13,7 +14,11 @@ class _UserAccountState extends State<UserAccount> {
     return Scaffold(
             backgroundColor:Colors.blue.shade900.withOpacity(.6) ,
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back),
+        leading: IconButton(
+          onPressed: (){
+            Navigator.pop(context);
+          },
+          icon:Icon(Icons.arrow_back)),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -45,9 +50,14 @@ class _UserAccountState extends State<UserAccount> {
                   Text("Personal Details>>",style: TextStyle(fontSize: 20),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 100),
-                    child: Text("Edit",style: TextStyle(color: Colors.blue
-                    ),
+                    padding: const EdgeInsets.only(left: 65),
+                    child: TextButton(
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonalDetail()));
+                      },
+                      child: Text("Edit",style: TextStyle(color: Colors.blue
+                      ),
+                      ),
                     ),
                     
                     
