@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:getsport/data/auth/forgot.dart';
 import 'package:getsport/presentation/modules/academy/academy_home.dart';
 import 'package:getsport/presentation/modules/admin/admin_login.dart';
 import 'package:getsport/presentation/modules/club/club_home.dart';
@@ -267,10 +268,18 @@ Helper.setPreference(id);
                         const SizedBox(
                           height: 40,
                         ),
-                        const Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text(
                           "Forgot Password?",
                           style: TextStyle(color: Colors.grey),
                         ),
+                        TextButton(onPressed: (){
+
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ForgotPswrd()));
+                        }, child: Text("Click",style: TextStyle(color: Colors.blue),))
+                      ],),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

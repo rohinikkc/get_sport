@@ -267,7 +267,12 @@ class VenuesListPage extends StatelessWidget {
                             child: TextButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  DbController().updateVenue(VenueModel(
+                                 DbController.getLocation(location.text).then((loc) {
+                                   DbController().updateVenue(VenueModel(
+                                    rating:model.rating ,
+                                    type:model.type ,
+                                    lat:loc.latitude ,
+                                    lon: loc.longitude,
                                     sponserId:model.sponserId ,
                                       price: double.parse(priceController.text),
                                       description: description.text,
@@ -280,6 +285,9 @@ class VenuesListPage extends StatelessWidget {
                                   Helper.successSnackBar(
                                       context, "Updation Successful");
                                   Navigator.pop(context);
+                                 }).catchError((error){
+                                  Helper.errorSnackBar(context, "Error while fetching location");
+                                 });
                                 }
                               },
                               child: const Text(

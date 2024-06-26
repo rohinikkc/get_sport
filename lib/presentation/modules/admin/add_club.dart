@@ -170,7 +170,8 @@ class _AddClubState extends State<AddClub> {
                       onPressed: () {
                         if (_key.currentState!.validate()) {
                           if (pickedFile != null) {
-                            DbController()
+                           DbController.getLocation(location.text).then((loc) {
+                             DbController()
                                 .uploadImage(pickedFile!, 'Club')
                                 .then((url) {
                               DbController()
@@ -180,6 +181,9 @@ class _AddClubState extends State<AddClub> {
                                 DbController().addNewClub(
                                     value.user!.uid,
                                     ClubModel(
+                                      lon: loc.longitude,
+                                      lat: loc.latitude,
+
                                       location: location.text,
                                         regId: regIDController.text,
                                         clubImage: url,
@@ -189,6 +193,9 @@ class _AddClubState extends State<AddClub> {
                                         Navigator.pop(context);
                               });
                             });
+                           }).catchError((error){
+                            Helper.errorSnackBar(context, "Error while fetching location");
+                           });
                           } else {
                             Helper.errorSnackBar(context, "Pick club image");
                           }

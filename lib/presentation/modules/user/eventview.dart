@@ -38,7 +38,7 @@ class _EventViewState extends State<EventView> {
                 Row(
                   children: [
                     Icon(Icons.schedule, color: Colors.blue),
-                    Text(widget.model.timig,
+                    Text(widget.model.time,
                         style: TextStyle(color: Colors.black.withOpacity(0.8))),
                   ],
                 ),

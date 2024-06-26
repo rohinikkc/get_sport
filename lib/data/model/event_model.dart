@@ -1,37 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EventModel {
   String? eventId;
   String eventName;
   String location;
-  String timig;
+  String time;
   String imageUrl;
   String joinfee;
   String eventHoster;
   String hosterId;
-  
+  double lat ;
+  double lon;
+  Timestamp ?timestamp;
+  String type;
+
 
   EventModel(
       {required this.joinfee,
       this.eventId,
+      required this.type,
+      this.timestamp,
+      required this.lat,
+      required this.lon,
       required this.hosterId,
       required this.eventHoster,
       required this.eventName,
       required this.imageUrl,
       required this.location,
-      required this.timig});
+      required this.time});
 
   Map<String, dynamic> toJson(id) => {
         "eventId": id,
+        "type":type,
+        "timestamp":Timestamp.now(),
+        "lat":lat,
+        "lon":lon,
         "hosterId":hosterId,
         "eventHoster":eventHoster,
         "joinfee": joinfee,
         "eventName": eventName,
         "location": location,
-        "timig": timig,
+        "time": time,
         "imageUrl": imageUrl,
       };
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
+      type:json["type"],
+      lon:json["lon"],
+      timestamp:json["timestamp"],
+      lat: json["lat"],
       hosterId:json["hosterId"],
       eventHoster:json["eventHoster"],
         joinfee: json["joinfee"],
@@ -39,6 +57,6 @@ class EventModel {
         eventName: json["eventName"],
         imageUrl: json["imageUrl"],
         location: json["location"],
-        timig: json["timig"]);
+        time: json["time"]);
   }
 }

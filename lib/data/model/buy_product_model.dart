@@ -26,12 +26,13 @@ class BuyProductModel {
       };
 
   factory BuyProductModel.fromJosn(Map<String, dynamic> json) {
+
     return BuyProductModel(
-        id: json["id"],
-        uid: json["uid"],
-        address: json["address"],
-        mobileNamber: json["mobileNamber"],
-        name: json["name"],
-        productModel: json["productModel"]);
+        id: json["id"]??"N/A",
+        uid: json["uid"]??"N/A",
+        address: json["address"]??"N/A",
+        mobileNamber: json["mobileNamber"]??"N/A",
+        name: json["name"]??"N/A",
+        productModel: ProductModel.fromJosn(json["productModel"]));
   }
 }

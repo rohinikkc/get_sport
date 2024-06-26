@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/model/club_model.dart';
 import 'package:getsport/presentation/modules/admin/add_club.dart';
+import 'package:getsport/presentation/widget/helper.dart';
 
 class ClubList extends StatefulWidget {
   const ClubList({super.key});
@@ -243,7 +244,10 @@ class _ClubListState extends State<ClubList> {
                             child: TextButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  DbController().updateClubData(ClubModel(
+                                 DbController.getLocation(locationController.text).then((value){
+                                   DbController().updateClubData(ClubModel(
+                                    lat: value.latitude,
+                                    lon: value.longitude,
                                       regId: model.regId,
                                       clubImage: model.clubImage,
                                       email: model.email,
@@ -251,6 +255,9 @@ class _ClubListState extends State<ClubList> {
                                       name: nameController.text,
                                       location: locationController.text));
                                   Navigator.pop(context);
+                                 }).catchError((error){
+                                  Helper.errorSnackBar(context, "Error while fetching location");
+                                 });
                                 }
                               },
                               child: const Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/presentation/modules/user/search.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,11 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
+
+
+List<String >sporstImage=["assets/download.jpeg","assets/download.jpeg","assets/download.jpeg"];
+List<String >martialImage=["assets/download.jpeg","assets/download.jpeg","assets/download.jpeg"];
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -57,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                 height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
+                  itemCount: sporstImage.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -68,14 +74,14 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Search()));
+                                        builder: (context) =>  Search(selectedType: DBFunctions.sport[index],)));
                               },
-                              child: Image.asset("assets/download.jpeg")),
-                          const Positioned(
+                              child: Image.asset(sporstImage[index])),
+                           Positioned(
                               top: 20,
                               left: 20,
                               child: Text(
-                                "Football",
+                                DBFunctions.sport[index],
                                 style: TextStyle(color: Colors.white),
                               )),
                         ],
@@ -110,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                 height: 200,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
+                  itemCount: martialImage.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -121,14 +127,14 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const Search()));
+                                        builder: (context) =>  Search(selectedType: DBFunctions.sport[index+3],)));
                               },
-                              child: Image.asset("assets/download.jpeg")),
-                          const Positioned(
+                              child: Image.asset(martialImage[index])),
+                           Positioned(
                               top: 20,
                               left: 20,
                               child: Text(
-                                "Football",
+                              DBFunctions.sport[index+3],
                                 style: TextStyle(color: Colors.white),
                               )),
                         ],

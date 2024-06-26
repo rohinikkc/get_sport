@@ -51,6 +51,7 @@ class Controller {
     );
   }
 
+
   Future<String> uploadImage(XFile imageFile) async {
     final storageRef = FirebaseStorage.instance.ref().child('images/${imageFile.name}');
     try {

@@ -274,7 +274,12 @@ class _AcademyVenuelistState extends State<AcademyVenuelist> {
                             child: TextButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  DbController().updateVenue(VenueModel(
+                                 DbController.getLocation(location.text).then((loc) {
+                                   DbController().updateVenue(VenueModel(
+                                    rating: model.rating,
+                                    type: model.type,
+                                    lat:loc.latitude ,
+                                    lon: loc.longitude,
                                       sponserId: FirebaseAuth
                                           .instance.currentUser!.uid,
                                       price: double.parse(priceController.text),
@@ -288,6 +293,9 @@ class _AcademyVenuelistState extends State<AcademyVenuelist> {
                                   Helper.successSnackBar(
                                       context, "Updation Successful");
                                   Navigator.pop(context);
+                                 }).catchError((error){
+                                  Helper.errorSnackBar(context, "Error while fetching location!");
+                                 });
                                 }
                               },
                               child: const Text(

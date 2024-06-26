@@ -110,7 +110,7 @@ class _ClubTournamentState extends State<ClubTournament> {
                                                 color: Colors.white,
                                               ),
                                               Text(
-                                                listOfEvents[index].timig,
+                                                listOfEvents[index].time,
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontWeight:

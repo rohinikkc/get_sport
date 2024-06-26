@@ -118,7 +118,7 @@ class _AddAcademyState extends State<AddAcademy> {
                           padding: const EdgeInsets.only(
                               right: 20, top: 30, left: 20),
                           child: TextFormField(
-                             validator: (value) {
+                            validator: (value) {
                               if (value!.isEmpty) {
                                 return "Field is required";
                               } else {
@@ -262,45 +262,65 @@ class _AddAcademyState extends State<AddAcademy> {
                             onPressed: () async {
                               if (_fromKey.currentState!.validate()) {
                                 if (selectedImage != null) {
-                                if(fromTime!=null||toTime!=null){
-                                    await controller
-                                      .uploadImage(XFile(selectedImage!.path))
-                                      .then((url) async {
-                                    final userCredential = await FirebaseAuth
-                                        .instance
-                                        .createUserWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                    );
-                                    final uid = userCredential.user!.uid;
-                                    final acadamyModel = AcadamyModel(
-                                        fromTime: "${fromTime!.hour}:${fromTime!.minute} ${fromTime!.period.name.toUpperCase()}",
-                                        email: emailController.text,
-                                        acadamyName: nameController.text,
-                                        image: url,
-                                        location: locationController.text,
-                                        sportsClass: sportsClassController.text,
-                                        toTime:  "${toTime!.hour}:${toTime!.minute} ${toTime!.period.name.toUpperCase()}",
-                                        id: uid);
+                                  if (fromTime != null || toTime != null) {
+                                    DbController.getLocation(
+                                            locationController.text)
+                                        .then((loc) async {
+                                        await controller
+                                          .uploadImage(
+                                              XFile(selectedImage!.path))
+                                          .then((url) async {
+                                       try{
+                                         final userCredential =
+                                            await FirebaseAuth.instance
+                                                .createUserWithEmailAndPassword(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                                );
+                                                 final uid = userCredential.user!.uid;
+                                        final acadamyModel = AcadamyModel(
+                                            lat: loc.latitude,
+                                            lon: loc.longitude,
+                                            fromTime:
+                                                "${fromTime!.hour}:${fromTime!.minute} ${fromTime!.period.name.toUpperCase()}",
+                                            email: emailController.text,
+                                            acadamyName: nameController.text,
+                                            image: url,
+                                            location: locationController.text,
+                                            sportsClass:
+                                                sportsClassController.text,
+                                            toTime:
+                                                "${toTime!.hour}:${toTime!.minute} ${toTime!.period.name.toUpperCase()}",
+                                            id: uid);
 
-                                    FirebaseFirestore.instance
-                                        .collection("Acadamy")
-                                        .doc(uid)
-                                        .set(acadamyModel.toMap())
-                                        .then((value)async {
-                                 await       DbController().saveLocation(locationController.text.trim(),"Acadamy",uid);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text("Acadamy Added"),
-                                      ));
-                                      Navigator.pop(context);
+                                        FirebaseFirestore.instance
+                                            .collection("Acadamy")
+                                            .doc(uid)
+                                            .set(acadamyModel.toMap())
+                                            .then((value) async {
+                                          await DbController().saveLocation(
+                                              locationController.text.trim(),
+                                              "Acadamy",
+                                              uid);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content: Text("Acadamy Added"),
+                                          ));
+                                          Navigator.pop(context);
+                                        });
+                                       }catch(error){
+                                        Helper.errorSnackBar(context, error.toString());
+                                       }
+                                       
+                                         });
+                                       }).catchError((error) {
+                                      Helper.errorSnackBar(context,
+                                          "Error while fetching location");
                                     });
-                                  });
-
-                                }else{
-                                  Helper.errorSnackBar(context, "Pick Time");
-                                }
-                                }else{
+                                  } else {
+                                    Helper.errorSnackBar(context, "Pick Time");
+                                  }
+                                } else {
                                   Helper.errorSnackBar(context, "Pick Image");
                                 }
                               }

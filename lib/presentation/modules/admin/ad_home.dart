@@ -3,6 +3,7 @@ import 'package:getsport/presentation/modules/admin/ad_academylist.dart';
 import 'package:getsport/presentation/modules/admin/ad_clublist.dart';
 import 'package:getsport/presentation/modules/admin/ad_eventlist.dart';
 import 'package:getsport/presentation/modules/admin/ad_menu.dart';
+import 'package:getsport/presentation/modules/admin/ad_order_list.dart';
 import 'package:getsport/presentation/modules/admin/ad_productlist.dart';
 import 'package:getsport/presentation/modules/admin/ad_trainerlist.dart';
 import 'package:getsport/presentation/modules/admin/ad_user_list.dart';
@@ -124,6 +125,18 @@ class _AdminHomeState extends State<AdminHome> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const UsersList()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_box),
+              iconColor: Colors.white,
+              title: const Text(
+                "Order List",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AdOrderList()));
               },
             ),
              ListTile(

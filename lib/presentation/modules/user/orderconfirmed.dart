@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getsport/presentation/modules/user/bottom_navigation.dart';
+import 'package:getsport/presentation/widget/rating_bar.dart';
 
 class OrderConfirm extends StatefulWidget {
   const OrderConfirm({super.key});
@@ -13,7 +14,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 5)).then((value) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>Navigation(indexnum: 0)), (route) => false);
+
+     
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>Navigation(indexnum: 0)), (route) => false);
     });
     return Scaffold(
           backgroundColor:const Color.fromARGB(255, 70, 109, 166).withOpacity(.6) ,

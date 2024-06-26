@@ -3,31 +3,34 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/venue_model.dart';
 import 'package:getsport/presentation/widget/helper.dart';
+import 'package:getsport/presentation/widget/sport_category.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddVenue extends StatefulWidget {
   String currentUserID;
-   AddVenue({super.key,required this.currentUserID});
+  AddVenue({super.key, required this.currentUserID});
 
   @override
   State<AddVenue> createState() => _AddVenueState();
 }
 
 class _AddVenueState extends State<AddVenue> {
-  final name=TextEditingController();
-    final location=TextEditingController();
+  final name = TextEditingController();
+  final location = TextEditingController();
 
-  final price=TextEditingController();
+  final price = TextEditingController();
 
-  final description=TextEditingController();
+  final description = TextEditingController();
 
-  final timing=TextEditingController();
+  final timing = TextEditingController();
 
-final _formKey=GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  XFile ?imagefile;
+  XFile? imagefile;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,13 +60,15 @@ final _formKey=GlobalKey<FormState>();
             child: SingleChildScrollView(
               child: Column(
                 children: [
+
+                  SportCategoryDropDown(),
                   Padding(
                     padding: const EdgeInsets.only(right: 50, left: 20),
                     child: TextFormField(
-                      validator:(value){
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-                        }else{
+                        } else {
                           return null;
                         }
                       },
@@ -79,68 +84,72 @@ final _formKey=GlobalKey<FormState>();
                     child: InkWell(
                       onTap: () {
                         Controller().pickImage().then((value) {
-                          imagefile=value;
-              
-                          setState(() {
-                            
-                          });
+                          imagefile = value;
+
+                          setState(() {});
                         });
                       },
-                      child:imagefile!=null?Image.file(
-                        File(imagefile!.path),
-                        height: 100,
-                        width: 100,
-                      ): Image.asset(
-                        "assets/image.png",
-                        height: 100,
-                        width: 100,
-                      ),
+                      child: imagefile != null
+                          ? Image.file(
+                              File(imagefile!.path),
+                              height: 100,
+                              width: 100,
+                            )
+                          : Image.asset(
+                              "assets/image.png",
+                              height: 100,
+                              width: 100,
+                            ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                      validator:(value){
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-                        }else{
+                        } else {
                           return null;
                         }
                       },
-                      controller:location ,
+                      controller: location,
                       decoration: const InputDecoration(
                         hintText: "Location",
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
-                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                      validator:(value){
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-                        }else{
+                        } else {
                           return null;
                         }
                       },
-                      controller:price ,
+                      controller: price,
                       decoration: const InputDecoration(
                         hintText: "Price",
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
-                  ), Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                      validator:(value){
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-                        }else{
+                        } else {
                           return null;
                         }
                       },
-                      controller:description ,
+                      controller: description,
                       decoration: const InputDecoration(
                         hintText: "Description",
                         hintStyle: TextStyle(color: Colors.grey),
@@ -148,12 +157,13 @@ final _formKey=GlobalKey<FormState>();
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
-                      validator:(value){
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-                        }else{
+                        } else {
                           return null;
                         }
                       },
@@ -169,18 +179,36 @@ final _formKey=GlobalKey<FormState>();
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          if(imagefile!=null){
-                            DbController().uploadImage(imagefile!, "Venue").then((value) {
-                              DbController().addNewVenue(VenueModel(
-                                sponserId:widget.currentUserID ,
-                                price: double.parse(price.text), description: description.text, imageUrl: value, location: location.text, timing: timing.text, venueName: name.text)).then((value) {
-                                Navigator.pop(context);
-                                Helper.successSnackBar(context, "Venue added successful");
+                        if (_formKey.currentState!.validate()) {
+                          if (imagefile != null) {
+                            DbController.getLocation(location.text).then((loc) {
+                              DbController()
+                                  .uploadImage(imagefile!, "Venue")
+                                  .then((value) {
+                                DbController()
+                                    .addNewVenue(VenueModel(
+                                      rating: 0.0,
+                                      type: Provider.of<DBFunctions>(context,listen: false).selectedSport!,
+                                        lat: loc.latitude,
+                                        lon: loc.longitude,
+                                        sponserId: widget.currentUserID,
+                                        price: double.parse(price.text),
+                                        description: description.text,
+                                        imageUrl: value,
+                                        location: location.text,
+                                        timing: timing.text,
+                                        venueName: name.text))
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                  Helper.successSnackBar(
+                                      context, "Venue added successful");
+                                });
                               });
+                            }).catchError((error) {
+                              Helper.errorSnackBar(
+                                  context, "Error while fetching location");
                             });
-              
-                          }else{
+                          } else {
                             Helper.errorSnackBar(context, "Pick Image!");
                           }
                         }

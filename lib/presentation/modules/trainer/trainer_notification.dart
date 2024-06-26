@@ -63,7 +63,7 @@ class _TrainerNotState extends State<TrainerNot> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         Text(list[index].timig,style: TextStyle(color: Colors.white ,fontWeight: FontWeight.w200),),
+                         Text(list[index].time,style: TextStyle(color: Colors.white ,fontWeight: FontWeight.w200),),
                           Padding(
                            padding: EdgeInsets.only(right: 50),
                            child: Row(

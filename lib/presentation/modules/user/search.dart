@@ -1,6 +1,12 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/club_model.dart';
 import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/data/model/venue_model.dart';
@@ -11,9 +17,12 @@ import 'package:getsport/presentation/modules/user/menubar.dart';
 import 'package:getsport/presentation/modules/user/venue.dart';
 import 'package:getsport/presentation/modules/user/venue_view.dart';
 import 'package:getsport/presentation/widget/helper.dart';
+import 'package:getsport/presentation/widget/rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  String selectedType;
+  Search({super.key, required this.selectedType});
 
   @override
   State<Search> createState() => _SearchState();
@@ -22,6 +31,9 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      
+    });
     return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -54,294 +66,447 @@ class _SearchState extends State<Search> {
               icon: const Icon(Icons.menu),
             ),
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-              IconButton(onPressed: () {
-Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MapPage()));
-
-              }, icon: const Icon(Icons.location_on))
+              // IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => MapPage()));
+                  },
+                  icon: const Icon(Icons.location_on))
             ],
             backgroundColor:
                 const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
           ),
-          body: TabBarView(children: [
-            StreamBuilder<QuerySnapshot>(
-                stream: DbController().getAllEvents(),
+          body: Consumer<DBFunctions>(builder: (context, controller, child) {
+            return FutureBuilder(
+                future: controller.getcCurrentLatLonPosition(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Helper.indiacator();
+                    return AlertDialog(
+                      elevation: 10,
+                      shape: const ContinuousRectangleBorder(),
+                      title: Row(children: [
+                         const Spacer(),
+                        Helper.indiacator(),
+                        const Spacer(),
+                        const Text("Fething Location...",style: TextStyle(fontSize: 15),),
+                         const Spacer(),
+                      ],),);
                   }
-                  List<EventModel> listOfEvents = [];
-                  listOfEvents = snapshot.data!.docs
-                      .map((e) =>
-                          EventModel.fromJson(e.data() as Map<String, dynamic>))
-                      .toList();
+                  return TabBarView(children: [
+                    FutureBuilder(
+                        future: DbController().getAllEventsinCurrentLocation(
+                            Provider.of<DBFunctions>(context, listen: false)
+                                .position!,
+                            widget.selectedType),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Helper.indiacator();
+                          }
+                          List<EventModel> listOfEvents = [];
+                          listOfEvents = snapshot.data!
+                              .map((e) => EventModel.fromJson(
+                                  e.data() as Map<String, dynamic>))
+                              .toList();
 
-                  if (snapshot.hasData) {
-                    return Helper.emptyListWidget(
-                        listOfEvents,
-                        "No Events",
-                        ListView.builder( 
-
-                          itemCount: listOfEvents.length,
-                          itemBuilder: (context, index) {
-                          return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.5),
-                              child: Container(
-                                height: 200,
-                                width: 400,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.blue.shade300),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child:
-                                          Image.network(listOfEvents[index].imageUrl),
-                                    ),
-                                     Column(
+                          if (snapshot.hasData) {
+                            return Helper.emptyListWidget(
+                                listOfEvents,
+                                "No Events",
+                                ListView.builder(
+                                  itemCount: listOfEvents.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 30, bottom: 30),
-                                          child: Text(
-                                            listOfEvents[index].eventName,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
+                                          padding: const EdgeInsets.all(10.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.blue.shade300),
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: SizedBox(
+                                                    height: 200,
+                                                    child: Image.network(
+                                                        listOfEvents[index]
+                                                            .imageUrl),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 30,
+                                                              bottom: 30),
+                                                      child: Text(
+                                                        listOfEvents[index]
+                                                            .eventName,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 80),
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(Icons
+                                                              .location_on),
+                                                          Text(listOfEvents[
+                                                                  index]
+                                                              .location),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 100),
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(Icons
+                                                              .currency_rupee),
+                                                          Text(listOfEvents[
+                                                                  index]
+                                                              .joinfee),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                        "Timing: ${listOfEvents[index].time}"),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                        "Hosted by: ${listOfEvents[index].eventHoster}"),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 80),
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.location_on),
-                                              Text(listOfEvents[index].location),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 100),
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.currency_rupee),
-                                              Text(listOfEvents[index].joinfee),
-                                            ],
-                                          ),
-                                        ),
-                                         const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text("Hosted by: ${listOfEvents[index].eventHoster}"),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EventView(
+                                                            model: listOfEvents[
+                                                                index],
+                                                          )));
+                                            },
+                                            child: const Text("Resister"))
                                       ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>  EventView(model: listOfEvents[index],)));
-                                },
-                                child: const Text("Resister"))
-                          ],
-                        );
-                        },));
-                  } else {
-                    return const SizedBox();
-                  }
-                }),
-            // Center(child: Text("event")),
-            // Center(child: Text("venues")),
-            // Center(child: Text("clubs")),
-            StreamBuilder<QuerySnapshot>(
-                stream: DbController().getAllVenues(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Helper.indiacator();
-                  }
-                  List<VenueModel> listofVenues = [];
-                  listofVenues = snapshot.data!.docs
-                      .map((e) =>
-                          VenueModel.fromJosn(e.data() as Map<String, dynamic>))
-                      .toList();
+                                    );
+                                  },
+                                ));
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                    // Center(child: Text("event")),
+                    // Center(child: Text("venues")),
+                    // Center(child: Text("clubs")),
+                    FutureBuilder(
+                        future: DbController().getAllVenuesinCurrentLocation(
+                            Provider.of<DBFunctions>(context, listen: false)
+                                .position!,
+                            widget.selectedType),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Helper.indiacator();
+                          }
+                          List<VenueModel> listofVenues = [];
+                          listofVenues = snapshot.data!
+                              .map((e) => VenueModel.fromJosn(
+                                  e.data() as Map<String, dynamic>))
+                              .toList();
 
-                  if (snapshot.hasData) {
-                    return Helper.emptyListWidget(
-                        listofVenues,
-                        "No Venues",
-                        ListView.builder( 
-                          itemCount: listofVenues.length,
-                          itemBuilder: (context, index) {
-                          return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.5),
-                              child: Container(
-                                height: 200,
-                                width: 400,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.blue.shade300),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child:
-                                          Image.network(listofVenues[index].imageUrl),
-                                    ),
-                                     Column(
+                          if (snapshot.hasData) {
+                            return Helper.emptyListWidget(
+                                listofVenues,
+                                "No Venues",
+                                ListView.builder(
+                                  itemCount: listofVenues.length,
+                                  itemBuilder: (context, index) {
+                                    return InkWell(
+                                      onLongPress: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text(
+                                                "Rate for this venue"),
+                                            content: CustomeRatingBar(
+                                              isConst: false,
+                                              itemSized: 40,
+                                              initialRating: 0,
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    FirebaseFirestore.instance
+                                                        .collection("Venues")
+                                                        .doc(listofVenues[index]
+                                                            .venueID!)
+                                                        .update({
+                                                      "rating": listofVenues[
+                                                                  index]
+                                                              .rating +
+                                                          Provider.of<DBFunctions>(
+                                                                  context,
+                                                                  listen: false)
+                                                              .ratingStar!
+                                                    }).then((value) {
+                                                      Provider.of<DBFunctions>(
+                                                              context,
+                                                              listen: false)
+                                                          .clearRating();
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    });
+                                                  },
+                                                  child: const Text("Rate"))
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.5),
+                                            child: Container(
+                                              height: 200,
+                                              width: 400,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.blue.shade300),
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: Image.network(
+                                                        listofVenues[index]
+                                                            .imageUrl),
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 30,
+                                                                bottom: 30),
+                                                        child: Text(
+                                                          listofVenues[index]
+                                                              .venueName,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 14),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 80),
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(Icons
+                                                                .location_on),
+                                                            Text(listofVenues[
+                                                                    index]
+                                                                .location),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 100),
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(Icons
+                                                                .currency_rupee),
+                                                            Text(listofVenues[
+                                                                    index]
+                                                                .price
+                                                                .toString()),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      CustomeRatingBar(
+                                                          isConst: true,
+                                                          initialRating:
+                                                              CustomeRatingBar.rating(
+                                                                  listofVenues[
+                                                                          index]
+                                                                      .rating
+                                                                      .toDouble()))
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            VenueView(
+                                                              model:
+                                                                  listofVenues[
+                                                                      index],
+                                                            )));
+                                              },
+                                              child: const Text("BOOK"))
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ));
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                    FutureBuilder(
+                        future: DbController().getAllClubsinCurrentLocation(
+                          Provider.of<DBFunctions>(context, listen: false)
+                              .position!,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Helper.indiacator();
+                          }
+                          List<ClubModel> listOfClubs = [];
+                          listOfClubs = snapshot.data!
+                              .map((e) => ClubModel.fromJosn(
+                                  e.data() as Map<String, dynamic>))
+                              .toList();
+
+                          if (snapshot.hasData) {
+                            return Helper.emptyListWidget(
+                                listOfClubs,
+                                "No Clubs",
+                                ListView.builder(
+                                  itemCount: listOfClubs.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 30, bottom: 30),
-                                          child: Text(
-                                            listofVenues[index].venueName,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
+                                          padding: const EdgeInsets.all(10.5),
+                                          child: Container(
+                                            height: 200,
+                                            width: 400,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.blue.shade300),
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: Image.network(
+                                                      listOfClubs[index]
+                                                          .clubImage),
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 30,
+                                                              bottom: 30),
+                                                      child: Text(
+                                                        listOfClubs[index].name,
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 80),
+                                                      child: Row(
+                                                        children: [
+                                                          const Icon(Icons
+                                                              .location_on),
+                                                          Text(
+                                                              listOfClubs[index]
+                                                                  .location),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    // Padding(
+                                                    //   padding: EdgeInsets.only(right: 100),
+                                                    //   child: Row(
+                                                    //     children: [
+                                                    //       Icon(Icons.currency_rupee),
+                                                    //       Text(listOfClubs[index),
+                                                    //     ],
+                                                    //   ),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 80),
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.location_on),
-                                              Text(listofVenues[index].location),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 100),
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.currency_rupee),
-                                              Text(listofVenues[index].price.toString()),
-                                            ],
-                                          ),
-                                        ),
+                                        // ElevatedButton(
+                                        //     onPressed: () {
+                                        //       Navigator.push(
+                                        //           context,
+                                        //           MaterialPageRoute(
+                                        //               builder: (context) => const Event()));
+                                        //     },
+                                        //     child: const Text("BOOK"))
                                       ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>  VenueView(model: listofVenues[index],)));
-                                },
-                                child: const Text("BOOK"))
-                          ],
-                        );
-                        },));
-                  } else {
-                    return const SizedBox();
-                  }
-                }), StreamBuilder<QuerySnapshot>(
-                stream: DbController().getAllClubs(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Helper.indiacator();
-                  }
-                  List<ClubModel> listOfClubs = [];
-                  listOfClubs = snapshot.data!.docs
-                      .map((e) =>
-                          ClubModel.fromJosn(e.data() as Map<String, dynamic>))
-                      .toList();
-
-                  if (snapshot.hasData) {
-                    return Helper.emptyListWidget(
-                        listOfClubs,
-                        "No Clubs",
-                        ListView.builder( 
-                          itemCount: listOfClubs.length,
-                          itemBuilder: (context, index) {
-                          return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.5),
-                              child: Container(
-                                height: 200,
-                                width: 400,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.blue.shade300),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child:
-                                          Image.network(listOfClubs[index].clubImage),
-                                    ),
-                                     Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 30, bottom: 30),
-                                          child: Text(
-                                            listOfClubs[index].name,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 80),
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.location_on),
-                                              Text(listOfClubs[index].location),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        // Padding(
-                                        //   padding: EdgeInsets.only(right: 100),
-                                        //   child: Row(
-                                        //     children: [
-                                        //       Icon(Icons.currency_rupee),
-                                        //       Text(listOfClubs[index),
-                                        //     ],
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            // ElevatedButton(
-                            //     onPressed: () {
-                            //       Navigator.push(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) => const Event()));
-                            //     },
-                            //     child: const Text("BOOK"))
-                          ],
-                        );
-                        },));
-                  } else {
-                    return const SizedBox();
-                  }
-                }),
-          ]),
+                                    );
+                                  },
+                                ));
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                  ]);
+                });
+          }),
         ));
   }
 }

@@ -7,7 +7,7 @@ import 'package:getsport/presentation/widget/payment_page.dart';
 
 class ProductBuy extends StatefulWidget {
   ProductModel model;
-   ProductBuy({super.key,required this.model});
+  ProductBuy({super.key, required this.model});
 
   @override
   State<ProductBuy> createState() => _ProductBuyState();
@@ -17,13 +17,15 @@ class _ProductBuyState extends State<ProductBuy> {
   final name = TextEditingController();
   final address = TextEditingController();
   final mobilenumber = TextEditingController();
-final __forkKey=GlobalKey<FormState>();
+  final __forkKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: const Icon(Icons.arrow_back_ios),
         ),
         actions: [
@@ -119,12 +121,14 @@ final __forkKey=GlobalKey<FormState>();
               const Text(
                 "Order Summary",
                 style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(
                 height: 20,
               ),
-               Row(
+              Row(
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(right: 200, left: 10, top: 10),
@@ -172,7 +176,7 @@ final __forkKey=GlobalKey<FormState>();
               const SizedBox(
                 height: 10,
               ),
-               Row(
+              Row(
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(right: 140, left: 10, top: 10),
@@ -198,17 +202,21 @@ final __forkKey=GlobalKey<FormState>();
               ),
               ElevatedButton(
                   onPressed: () {
-                if(__forkKey.currentState!.validate()){
-
+                    if (__forkKey.currentState!.validate()) {
                       Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PaymentPage(
-                          amount: widget.model.price,buyProductModel: BuyProductModel(
-                        
-                           uid:FirebaseAuth.instance.currentUser!.uid, address: address.text, mobileNamber: mobilenumber.text, name: name.text, productModel: widget.model  ),)));
-                  
-                }
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentPage(
+                                    amount: widget.model.price,
+                                    buyProductModel: BuyProductModel(
+                                        uid: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                        address: address.text,
+                                        mobileNamber: mobilenumber.text,
+                                        name: name.text,
+                                        productModel: widget.model),
+                                  )));
+                    }
                   },
                   child: const Text(
                     "confirm",

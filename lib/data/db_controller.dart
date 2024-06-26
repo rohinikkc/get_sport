@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:getsport/data/model/club_model.dart';
 import 'package:getsport/data/model/coach_model.dart';
 import 'package:getsport/data/model/event_model.dart';
@@ -83,6 +84,33 @@ class DbController {
     return db.collection("Clubs").snapshots();
   }
 
+
+List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfClubs = [];
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getAllClubsinCurrentLocation(Position position,) async {
+    listOfClubs = [];
+    final snapshot = db
+        .collection("Clubs")
+       
+        // .orderBy("timestamp", descending: true)
+        .snapshots();
+    snapshot.listen((event) {
+      log(event.docs.length.toString());
+      for (var i in event.docs) {
+        double lat = i.data()["lat"];
+        double lon = i.data()["lon"];
+
+        if (lat.toInt() == position.latitude.toInt() &&
+            lon.toInt() == position.longitude.toInt()) {
+          listOfClubs.add(i);
+        }
+      }
+    });
+
+    log(listOfClubs.length.toString());
+    return listOfClubs;
+  }
   updateClubData(ClubModel clunModel) {
     db.collection("Clubs").doc(clunModel.id).update(clunModel.toJosn());
   }
@@ -96,7 +124,7 @@ class DbController {
 
 //......................................PRODUCT
 
-  addNewProduct(ProductModel productModel) async {
+  Future addNewProduct(ProductModel productModel) async {
     final docs = db.collection("Products").doc();
 
     docs.set(productModel.toJson(docs.id));
@@ -117,6 +145,33 @@ class DbController {
   Stream<QuerySnapshot> getAllVenues() {
     return db.collection("Venues").snapshots();
   }
+List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getAllVenuesinCurrentLocation(Position position, String type) async {
+    listOfVenues = [];
+    final snapshot = db
+        .collection("Venues")
+        .where("type", isEqualTo: type)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+    snapshot.listen((event) {
+      log(event.docs.length.toString());
+      for (var i in event.docs) {
+        double lat = i.data()["lat"];
+        double lon = i.data()["lon"];
+
+        if (lat.toInt() == position.latitude.toInt() &&
+            lon.toInt() == position.longitude.toInt()) {
+          listOfVenues.add(i);
+        }
+      }
+    });
+
+    log(listOfVenues.length.toString());
+    return listOfVenues;
+  }
+  
 
   Stream<QuerySnapshot> getAcademiesVenues() {
     return db
@@ -143,6 +198,33 @@ class DbController {
 
   Stream<QuerySnapshot> getAllEvents() {
     return db.collection("Events").snapshots();
+  }
+
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> list = [];
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getAllEventsinCurrentLocation(Position position, String type) async {
+    list = [];
+    final snapshot = db
+        .collection("Events")
+        .where("type", isEqualTo: type)
+        .orderBy("time", descending: false)
+        .snapshots();
+    snapshot.listen((event) {
+      log(event.docs.length.toString());
+      for (var i in event.docs) {
+        double lat = i.data()["lat"];
+        double lon = i.data()["lon"];
+
+        if (lat.toInt() == position.latitude.toInt() &&
+            lon.toInt() == position.longitude.toInt()) {
+          list.add(i);
+        }
+      }
+    });
+
+    log(list.length.toString());
+    return list;
   }
 
   Future addEvents(EventModel eventModel) async {
@@ -183,8 +265,6 @@ class DbController {
     return db.collection(collection).doc(id).get();
   }
 
-
-
   saveLocation(location, type, itemid) async {
     locationFromAddress(location).then((value) {
       final data = value[0];
@@ -201,48 +281,84 @@ class DbController {
     return db.collection("location").get();
   }
 
-  addToWishList(productId)async {
+  addToWishList(productId) async {
     log(FirebaseAuth.instance.currentUser!.uid);
     log(productId);
-  final doc=  db
+    final doc = db
         .collection("user")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("Wish List")
         .doc(productId);
-  await   doc.get().then((snapshot) {
-     if(!snapshot.exists){
-      doc .set({"id": productId});log("exist");
-    }else{
-      doc.delete();
-      log("!exist");
-    }
-
+    await doc.get().then((snapshot) {
+      if (!snapshot.exists) {
+        doc.set({"id": productId});
+        log("exist");
+      } else {
+        doc.delete();
+        log("!exist");
+      }
     });
-
-
-   
   }
 
-Stream<DocumentSnapshot> checkTheProductIsAleradyExistInWishList(productId){
-   return   db
+  Stream<DocumentSnapshot> checkTheProductIsAleradyExistInWishList(productId) {
+    return db
         .collection("user")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("Wish List")
-        .doc(productId).snapshots();
-
-      
-
+        .doc(productId)
+        .snapshots();
   }
 
- Future<QuerySnapshot> getMyWishList(){
-    return   db
+  Future<QuerySnapshot> getMyWishList() {
+    return db
         .collection("user")
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("Wish List").get();
-
+        .collection("Wish List")
+        .get();
   }
 
- Future<DocumentSnapshot> getSelectedProductData(id)async{
-   return await db.collection("Products").doc(id).get();
+  Future<DocumentSnapshot> getSelectedProductData(id) async {
+    return await db.collection("Products").doc(id).get();
+  }
+
+  static Future<Location> getLocation(String address) async {
+    return await locationFromAddress(address.toLowerCase())
+        .then((value) => value[0]);
+  }
+
+
+updateUserProfileImage(newImage){
+   db.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).update({"imageUrl":newImage});
+}
+
+
+
+  updateUserProfile(newName,newPhoneNumber){
+    db.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).update({"name":newName,"phone":newPhoneNumber});
+  }
+
+
+
+updateCoachProfileImage(newImage){
+   db.collection("Coachs").doc(FirebaseAuth.instance.currentUser!.uid).update({"profile":newImage});
+}
+
+
+  updateTrainerProfile(newName,description){
+    db.collection("Coachs").doc(FirebaseAuth.instance.currentUser!.uid).update({"name":newName,"description":description});
+  }
+
+
+
+  //---------order
+   Future<QuerySnapshot> getMyOrder() {
+    return db
+        .collection("Orders").where("uid",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+   
+        .get();
+  }
+
+ Future<QuerySnapshot<Map<String,dynamic>>> getAllOrderForAdmin()async{
+    return  db.collection("Orders").get();
   }
 }

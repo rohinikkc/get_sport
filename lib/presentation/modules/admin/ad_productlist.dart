@@ -220,6 +220,7 @@ class _ProductListState extends State<ProductList> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   DbController().updateProduct(ProductModel(
+                                    type: model.type,
                                     productId: model.productId,
                                       imageUrl: model.imageUrl,
                                       name: nameController.text,

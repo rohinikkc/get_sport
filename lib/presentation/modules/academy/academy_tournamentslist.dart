@@ -146,7 +146,7 @@ class _AcademyTournamentState extends State<AcademyTournament> {
                                                       ),
                                                       Text(
                                                         listOfEvents[index]
-                                                            .timig,
+                                                            .time,
                                                         style: const TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:

@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/presentation/widget/helper.dart';
+import 'package:getsport/presentation/widget/sport_category.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -50,15 +53,15 @@ class _AddProductState extends State<AddProduct> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  SportCategoryDropDown(),
                   Padding(
                     padding: const EdgeInsets.only(right: 50, left: 20),
                     child: TextFormField(
                       controller: name,
                       validator: (value) {
-                        if(value!.isEmpty){
+                        if (value!.isEmpty) {
                           return "Field is empty";
-              
-                        }else{
+                        } else {
                           return null;
                         }
                       },
@@ -91,15 +94,15 @@ class _AddProductState extends State<AddProduct> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       controller: price,
-                       validator: (value) {
-                        if(value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return "Field is empty";
-              
-                        }else{
+                        } else {
                           return null;
                         }
                       },
@@ -119,16 +122,21 @@ class _AddProductState extends State<AddProduct> {
                             DbController()
                                 .uploadImage(imageFile!, "Product")
                                 .then((url) {
-                              DbController().addNewProduct(ProductModel(
-                                  imageUrl: url,
-                                  name: name.text,
-                                  price: double.parse(price.text),
-                                  rating: 0));
+                              DbController()
+                                  .addNewProduct(ProductModel(
+                                      type: Provider.of<DBFunctions>(context,
+                                              listen: false)
+                                          .selectedSport!,
+                                      imageUrl: url,
+                                      name: name.text,
+                                      price: double.parse(price.text),
+                                      rating: 0))
+                                  .then((value) {
+                                Helper.successSnackBar(
+                                    context, "Product added successful");
+                                Navigator.pop(context);
+                              });
                             });
-              
-                            Helper.successSnackBar(
-                                context, "Product added successful");
-                            Navigator.pop(context);
                           } else {
                             Helper.errorSnackBar(context, "Pick Image!");
                           }

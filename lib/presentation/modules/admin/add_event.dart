@@ -1,17 +1,23 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:getsport/data/crud/controller.dart';
 import 'package:getsport/data/db_controller.dart';
+import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/event_model.dart';
 import 'package:getsport/presentation/widget/helper.dart';
+import 'package:getsport/presentation/widget/sport_category.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddEvent extends StatefulWidget {
   String hosterType;
-   AddEvent({super.key,required this.hosterType});
+  AddEvent({super.key, required this.hosterType});
 
   @override
   State<AddEvent> createState() => _AddEventState();
@@ -26,6 +32,10 @@ class _AddEventState extends State<AddEvent> {
   final _formKey = GlobalKey<FormState>();
 
   XFile? imageFile;
+
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  Timestamp? selectedDateTime;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +43,7 @@ class _AddEventState extends State<AddEvent> {
         backgroundColor:
             const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
         leading: Icon(Icons.arrow_back, color: Colors.blue.shade900),
-        title: Text("Add Event"),
+        title: const Text("Add Event"),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -55,6 +65,7 @@ class _AddEventState extends State<AddEvent> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  const SportCategoryDropDown(),
                   Padding(
                     padding: const EdgeInsets.only(right: 50, left: 20),
                     child: TextFormField(
@@ -66,7 +77,7 @@ class _AddEventState extends State<AddEvent> {
                           return null;
                         }
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Event Name",
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
@@ -95,7 +106,8 @@ class _AddEventState extends State<AddEvent> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
                       controller: location,
                       validator: (value) {
@@ -105,34 +117,69 @@ class _AddEventState extends State<AddEvent> {
                           return null;
                         }
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Location",
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
-                    child: TextFormField(
-                      controller: timing,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Field is required";
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Timing",
-                        hintStyle: TextStyle(color: Colors.grey),
-                      ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showDatePicker(
+                              context: context,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2050))
+                          .then((value) {
+                        setState(() {
+                          selectedDate = value;
+                        });
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(Icons.date_range),
+                        const Text("Date"),
+                        Text(selectedDate != null
+                            ? "${selectedDate}"
+                            : "Select Date")
+                      ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      ).then((value) {
+                        setState(() {
+                          selectedTime = value;
+                        });
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(Icons.timer),
+                        const Text("Time"),
+                        Text(selectedTime != null
+                            ? "${selectedTime}"
+                            : "Select TIme")
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 20, top: 30, left: 20),
+                    padding:
+                        const EdgeInsets.only(right: 20, top: 30, left: 20),
                     child: TextFormField(
                       controller: joinFee,
                       validator: (value) {
@@ -142,42 +189,62 @@ class _AddEventState extends State<AddEvent> {
                           return null;
                         }
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Join Fee",
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           if (imageFile != null) {
+                        if (selectedDate != null && selectedTime != null) {
+                         
+                            DbController.getLocation(location.text).then((loc) {
                             DbController()
                                 .uploadImage(imageFile!, "Events")
                                 .then((url) {
                               DbController()
                                   .addEvents(EventModel(
-                                    hosterId: FirebaseAuth.instance.currentUser!.uid,
-                                    eventHoster: widget.hosterType,
+                                      type: Provider.of<DBFunctions>(context,
+                                              listen: false)
+                                          .selectedSport!,
+                                      lat: loc.latitude,
+                                      lon: loc.longitude,
+                                      hosterId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      eventHoster: widget.hosterType,
                                       joinfee: joinFee.text,
                                       eventName: eventname.text,
                                       imageUrl: url,
                                       location: location.text,
-                                      timig: timing.text))
+                                      time: _combineDateTime()))
                                   .then((value) {
                                 Navigator.pop(context);
-                                Helper.successSnackBar(context, "Event Added Successful!");
+                                Helper.successSnackBar(
+                                    context, "Event Added Successful!");
                               });
                             });
-                          } else {
-                            Helper.errorSnackBar(context, "Pick Image!");
-                          }
+                          }).catchError((onError) {
+                            Helper.errorSnackBar(
+                                context, "Error while fetching   location");
+                          });
+
+                              }else{
+                                                            Helper.errorSnackBar(context, "Select Date And Time!");
+
+                              }
+
+                            } else {
+                              Helper.errorSnackBar(context, "Pick Image!");
+                            }
                         }
                       },
-                      child: Text(
+                      child: const Text(
                         "Submit",
                         style: TextStyle(color: Colors.black),
                       ))
@@ -188,5 +255,19 @@ class _AddEventState extends State<AddEvent> {
         ),
       ),
     );
+  }
+
+  String _combineDateTime() {
+    String? combineString;
+    if (selectedDate != null && selectedTime != null) {
+      final formatedDate = DateFormat("dd MMMM yyyy").format(selectedDate!).toString();
+      final formatedTime = "${selectedTime!.hour}:${selectedTime!.minute}";
+final list=[formatedDate,formatedTime];
+combineString=list.join(' at ');
+      log('Timestamp: $combineString');
+
+      //  25 June 2024 at 13:39:13
+    }
+    return combineString!;
   }
 }
