@@ -31,7 +31,7 @@ class _AddProductState extends State<AddProduct> {
         backgroundColor:
             const Color.fromARGB(255, 139, 192, 235).withOpacity(0.8),
         leading: Icon(Icons.arrow_back, color: Colors.blue.shade900),
-        title: const Text("Add Academy"),
+        title: const Text("Add product"),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),

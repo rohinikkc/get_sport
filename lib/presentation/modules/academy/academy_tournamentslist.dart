@@ -90,7 +90,7 @@ class _AcademyTournamentState extends State<AcademyTournament> {
                                   return Padding(
                                     padding: const EdgeInsets.all(10),
                                     child: Container(
-                                      height: 200,
+                                      height: 250,
                                       width: 330,
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -159,52 +159,47 @@ class _AcademyTournamentState extends State<AcademyTournament> {
                                                     height: 20,
                                                   ),
                                                   //  Text("Monday- Friday   9:00am-5:00pm",style: TextStyle(fontSize: 12,color: Colors.white),),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10),
-                                                    child: Row(
-                                                      children: [
-                                                        ElevatedButton.icon(
-                                                            onPressed: () {
-                                                              DbController().deleteSelectedDoc(
-                                                                  "Events",
-                                                                  listOfEvents[
-                                                                          index]
-                                                                      .eventId);
-                                                            },
-                                                            icon: const Icon(
-                                                              Icons.delete,
-                                                              color:
-                                                                  Colors.blue,
-                                                            ),
-                                                            label: const Text(
-                                                                "Delete",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .blue))),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        ElevatedButton(
+                                                  Column(
+                                                    children: [
+                                                      ElevatedButton.icon(
                                                           onPressed: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            AcademyReglist(
-                                                                              eventId: listOfEvents[index].eventId!,
-                                                                            )));
+                                                            DbController().deleteSelectedDoc(
+                                                                "Events",
+                                                                listOfEvents[
+                                                                        index]
+                                                                    .eventId);
                                                           },
-                                                          child: Text(
-                                                              "Resitesration",
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                            color:
+                                                                Colors.blue,
+                                                          ),
+                                                          label: const Text(
+                                                              "Delete",
                                                               style: TextStyle(
                                                                   color: Colors
-                                                                      .blue)),
-                                                        )
-                                                      ],
-                                                    ),
+                                                                      .blue))),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          AcademyReglist(
+                                                                            eventId: listOfEvents[index].eventId!,
+                                                                          )));
+                                                        },
+                                                        child: Text(
+                                                            "Registration",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .blue)),
+                                                      )
+                                                    ],
                                                   ),
                                                 ],
                                               ),

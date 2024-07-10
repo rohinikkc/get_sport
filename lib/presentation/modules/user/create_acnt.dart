@@ -349,7 +349,7 @@ backgroundColor: const Color.fromARGB(255, 0, 36, 90),
                     borderRadius: BorderRadius.circular(10)
                   ),
                   child:const Center(
-                  child: Text("Sign In",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                  child: Text("Sign UP",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                 ),
                             ),
               )),

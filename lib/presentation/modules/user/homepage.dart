@@ -13,8 +13,8 @@ class HomePage extends StatefulWidget {
 
 
 
-List<String >sporstImage=["assets/download.jpeg","assets/download.jpeg","assets/download.jpeg"];
-List<String >martialImage=["assets/download.jpeg","assets/download.jpeg","assets/download.jpeg"];
+List<String >sporstImage=["assets/image 10.png","assets/bat.png","assets/basketball.png"];
+List<String >martialImage=["assets/kungfu.png","assets/kabadiii.png","assets/kabadiii.png"];
 
 class _HomePageState extends State<HomePage> {
   @override

@@ -72,8 +72,11 @@ class SpashScreen extends StatelessWidget {
     });
 
     return const Scaffold(
+      backgroundColor: Color.fromARGB(255, 2, 58, 103) ,
       body: Center(
-        child: Text("GETSPORT"),
+        
+        child: Image(image: AssetImage("assets/logo.png"))
+
       ),
     );
   }

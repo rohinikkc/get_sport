@@ -158,7 +158,7 @@ class _EventListState extends State<EventList> {
                                                     style: TextStyle(
                                                         color: Colors.blue))),
                                         
-                                                        const SizedBox(width: 20,),
+                                                        const SizedBox(width: 18,),
                                                          ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.push(

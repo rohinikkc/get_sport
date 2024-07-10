@@ -60,7 +60,7 @@ class _ClubTournamentState extends State<ClubTournament> {
                           return Padding(
                             padding: const EdgeInsets.all(10),
                             child: Container(
-                              height: 200,
+                              height: 250,
                               width: 330,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
@@ -125,7 +125,7 @@ class _ClubTournamentState extends State<ClubTournament> {
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 10),
-                                            child: Row(
+                                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround,
                                               children: [
                                                 ElevatedButton.icon(
                                                     onPressed: () {
@@ -159,7 +159,7 @@ class _ClubTournamentState extends State<ClubTournament> {
                                                                       .eventId!,
                                                                 )));
                                                   },
-                                                  child: Text("Resitesration",
+                                                  child: Text("Registration",
                                                       style: TextStyle(
                                                           color: Colors.blue)),
                                                 )
