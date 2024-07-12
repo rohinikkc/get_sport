@@ -28,6 +28,7 @@ class _AddTrainerState extends State<AddTrainer> {
 
   final descriptionController = TextEditingController();
   XFile? pickedFile;
+  XFile? pickedCertificateFile;
 
   TimeOfDay? fromTime;
   _getTime() async {
@@ -73,8 +74,8 @@ class _AddTrainerState extends State<AddTrainer> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Container(
-          height: 600,
-          width: 350,
+          // height: 600,
+          // width: 350,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.blueGrey)),
@@ -137,28 +138,82 @@ class _AddTrainerState extends State<AddTrainer> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: InkWell(
-                      onTap: () {
-                        Controller().pickImage().then((value) {
-                          pickedFile=value;
-                          setState(() {
-                            
-                          });
-                        });
-                      },
-                      child:pickedFile!=null?SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Image.file(
-                          fit: BoxFit.cover,
-                          File(pickedFile!.path))) :Image.asset(
-                        "assets/image.png",
-                        height: 100,
-                        width: 100,
+                  Row(
+                    children: [
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Controller().pickImage().then((value) {
+                                  pickedFile = value;
+                                  setState(() {});
+                                });
+                              },
+                              child: pickedFile != null
+                                  ? SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: Image.file(
+                                          fit: BoxFit.cover,
+                                          File(pickedFile!.path)))
+                                  : Image.asset(
+                                      "assets/image.png",
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Profile",
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(.5)),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Controller().pickImage().then((value) {
+                                  pickedCertificateFile = value;
+                                  setState(() {});
+                                });
+                              },
+                              child: pickedCertificateFile != null
+                                  ? SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: Image.file(
+                                          fit: BoxFit.cover,
+                                          File(pickedCertificateFile!.path)))
+                                  : Image.asset(
+                                      "assets/image.png",
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Certificate",
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(.5)),
+                            )
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                    ],
                   ),
                   Padding(
                     padding:
@@ -260,7 +315,8 @@ class _AddTrainerState extends State<AddTrainer> {
                   ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          if ((pickedFile != null) &&
+                          if ((pickedFile != null &&
+                                  pickedCertificateFile != null) &&
                               (fromTime != null && toTime != null)) {
                             DbController()
                                 .createaccount(
@@ -268,10 +324,9 @@ class _AddTrainerState extends State<AddTrainer> {
                                     emailController.text.trim(),
                                     passwordController.text.trim())
                                 .then((value) {
-                              DbController()
-                                  .uploadImage(pickedFile!, "CoachProfile")
-                                  .then((url) {
+                              _storeImage().then((_) {
                                 DbController().addNewCoach(CoachModel(
+                                    certificate: _certificate,
                                     coachId: value.user!.uid,
                                     description: descriptionController.text,
                                     email: emailController.text,
@@ -279,11 +334,11 @@ class _AddTrainerState extends State<AddTrainer> {
                                         "${fromTime!.hour}:${fromTime!.minute} ${fromTime!.period.name.toUpperCase()}",
                                     location: locationController.text,
                                     name: nameController.text,
-                                    profile: url,
+                                    profile: _profile,
                                     toTime:
                                         "${toTime!.hour}:${toTime!.minute} ${toTime!.period.name.toUpperCase()}",
                                     trainingClass: sportsClassController.text));
-                                    Navigator.pop(context);
+                                Navigator.pop(context);
                               });
                             });
                           } else {
@@ -303,5 +358,16 @@ class _AddTrainerState extends State<AddTrainer> {
         ),
       ),
     );
+  }
+
+  String _profile = '';
+  String _certificate = '';
+  Future _storeImage() async {
+    await DbController()
+        .uploadImage(pickedFile!, "CoachProfile")
+        .then((value) => _profile = value);
+    await DbController()
+        .uploadImage(pickedCertificateFile!, "CoachCertificate")
+        .then((value) => _certificate = value);
   }
 }

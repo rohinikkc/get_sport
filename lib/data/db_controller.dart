@@ -84,15 +84,16 @@ class DbController {
     return db.collection("Clubs").snapshots();
   }
 
-
-List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfClubs = [];
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfClubs = [];
 
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      getAllClubsinCurrentLocation(Position position,) async {
+      getAllClubsinCurrentLocation(
+    Position position,
+  ) async {
     listOfClubs = [];
     final snapshot = db
         .collection("Clubs")
-       
+
         // .orderBy("timestamp", descending: true)
         .snapshots();
     snapshot.listen((event) {
@@ -111,6 +112,7 @@ List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfClubs = [];
     log(listOfClubs.length.toString());
     return listOfClubs;
   }
+
   updateClubData(ClubModel clunModel) {
     db.collection("Clubs").doc(clunModel.id).update(clunModel.toJosn());
   }
@@ -145,7 +147,8 @@ List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfClubs = [];
   Stream<QuerySnapshot> getAllVenues() {
     return db.collection("Venues").snapshots();
   }
-List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
+
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
 
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
       getAllVenuesinCurrentLocation(Position position, String type) async {
@@ -171,7 +174,6 @@ List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
     log(listOfVenues.length.toString());
     return listOfVenues;
   }
-  
 
   Stream<QuerySnapshot> getAcademiesVenues() {
     return db
@@ -198,6 +200,13 @@ List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
 
   Stream<QuerySnapshot> getAllEvents() {
     return db.collection("Events").snapshots();
+  }
+
+  Future<int> getRegEventCount(id) async {
+    final snapshot =
+        await db.collection("Events").doc(id).collection("Registration").get();
+
+    return snapshot.docs.length;
   }
 
   List<QueryDocumentSnapshot<Map<String, dynamic>>> list = [];
@@ -326,39 +335,43 @@ List<QueryDocumentSnapshot<Map<String, dynamic>>> listOfVenues = [];
         .then((value) => value[0]);
   }
 
-
-updateUserProfileImage(newImage){
-   db.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).update({"imageUrl":newImage});
-}
-
-
-
-  updateUserProfile(newName,newPhoneNumber){
-    db.collection("user").doc(FirebaseAuth.instance.currentUser!.uid).update({"name":newName,"phone":newPhoneNumber});
+  updateUserProfileImage(newImage) {
+    db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"imageUrl": newImage});
   }
 
-
-
-updateCoachProfileImage(newImage){
-   db.collection("Coachs").doc(FirebaseAuth.instance.currentUser!.uid).update({"profile":newImage});
-}
-
-
-  updateTrainerProfile(newName,description){
-    db.collection("Coachs").doc(FirebaseAuth.instance.currentUser!.uid).update({"name":newName,"description":description});
+  updateUserProfile(newName, newPhoneNumber) {
+    db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"name": newName, "phone": newPhoneNumber});
   }
 
+  updateCoachProfileImage(newImage) {
+    db
+        .collection("Coachs")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"profile": newImage});
+  }
 
+  updateTrainerProfile(newName, description) {
+    db
+        .collection("Coachs")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"name": newName, "description": description});
+  }
 
   //---------order
-   Future<QuerySnapshot> getMyOrder() {
+  Future<QuerySnapshot> getMyOrder() {
     return db
-        .collection("Orders").where("uid",isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-   
+        .collection("Orders")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
   }
 
- Future<QuerySnapshot<Map<String,dynamic>>> getAllOrderForAdmin()async{
-    return  db.collection("Orders").get();
+  Future<QuerySnapshot<Map<String, dynamic>>> getAllOrderForAdmin() async {
+    return db.collection("Orders").get();
   }
 }

@@ -9,15 +9,16 @@ class EventModel {
   String joinfee;
   String eventHoster;
   String hosterId;
-  double lat ;
+  double lat;
   double lon;
-  Timestamp ?timestamp;
+  Timestamp? timestamp;
   String type;
-
+  int targetPartipent;
 
   EventModel(
       {required this.joinfee,
       this.eventId,
+      required this.targetPartipent,
       required this.type,
       this.timestamp,
       required this.lat,
@@ -31,12 +32,13 @@ class EventModel {
 
   Map<String, dynamic> toJson(id) => {
         "eventId": id,
-        "type":type,
-        "timestamp":Timestamp.now(),
-        "lat":lat,
-        "lon":lon,
-        "hosterId":hosterId,
-        "eventHoster":eventHoster,
+        "type": type,
+        "targetPartipent": targetPartipent,
+        "timestamp": Timestamp.now(),
+        "lat": lat,
+        "lon": lon,
+        "hosterId": hosterId,
+        "eventHoster": eventHoster,
         "joinfee": joinfee,
         "eventName": eventName,
         "location": location,
@@ -46,12 +48,13 @@ class EventModel {
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
-      type:json["type"],
-      lon:json["lon"],
-      timestamp:json["timestamp"],
-      lat: json["lat"],
-      hosterId:json["hosterId"],
-      eventHoster:json["eventHoster"],
+        targetPartipent: json["targetPartipent"],
+        type: json["type"],
+        lon: json["lon"],
+        timestamp: json["timestamp"],
+        lat: json["lat"],
+        hosterId: json["hosterId"],
+        eventHoster: json["eventHoster"],
         joinfee: json["joinfee"],
         eventId: json["eventId"],
         eventName: json["eventName"],

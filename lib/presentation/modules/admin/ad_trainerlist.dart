@@ -317,6 +317,7 @@ class _TrainerListState extends State<TrainerList> {
                                 if (_formKey.currentState!.validate()) {
                                   if (fromTime != null && toTime != null) {
                                     DbController().updateTrainerData(CoachModel(
+                                      certificate:coach.certificate ,
                                         coachId: coach.coachId,
                                         description: descriptionController.text,
                                         email: coach.email,

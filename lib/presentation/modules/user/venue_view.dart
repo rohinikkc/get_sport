@@ -13,9 +13,9 @@ class VenueView extends StatefulWidget {
 }
 
 class _VenueViewState extends State<VenueView> {
-  final nameController=TextEditingController();
-  final emailController=TextEditingController();
-  final _formKey=GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,51 +148,68 @@ class _VenueViewState extends State<VenueView> {
 
             ElevatedButton(
               onPressed: () {
-
-                showDialog(context: context, builder: (context)=>AlertDialog(
-
-                  title: Form(
-                    key: _formKey,
-                    child: Column(children: [
-                      TextFormField(
-                        controller: nameController,
-                        validator: (value) {
-                          if(value!.isEmpty){
-                           return "Field is required";
-                          }else{
-                            return  null;
-                          }
-                        },
-                        decoration: const InputDecoration(hintText: "Name"),
-                        
-                      ),
-                      const SizedBox(height: 20,),
-                       TextFormField(
-                        controller: emailController,
-                        validator: (value) {
-                          if(value!.isEmpty){
-                           return "Field is required";
-                          }else{
-                            return  null;
-                          }
-                        },
-                        decoration: const InputDecoration(hintText: "Email"),
-                        
-                      ),
-                      const SizedBox(height: 30,),
-                    
-                      ElevatedButton(onPressed: (){
-                    if(_formKey.currentState!.validate()){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>SlotePackagePage(
-                        amount: widget.model.price,
-                        
-                        venueName: widget.model.venueName, venueID: widget.model.venueID!, email: emailController.text, name: nameController.text) ),);
-                    }
-                    
-                      }, child: const Text("Book Now"))
-                    ],),
-                  ),
-                ));
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: nameController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Field is required";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration:
+                                      const InputDecoration(hintText: "Name"),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  controller: emailController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Field is required";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration:
+                                      const InputDecoration(hintText: "Email"),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SlotePackagePage(
+                                                      amount:
+                                                          widget.model.price,
+                                                      venueName: widget
+                                                          .model.venueName,
+                                                      venueID:
+                                                          widget.model.venueID!,
+                                                      email:
+                                                          emailController.text,
+                                                      name:
+                                                          nameController.text)),
+                                        );
+                                      }
+                                    },
+                                    child: const Text("Book Now"))
+                              ],
+                            ),
+                          ),
+                        ));
 
                 // Navigator.push(context,
                 //     MaterialPageRoute(builder: (context) => Booking()));

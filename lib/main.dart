@@ -51,11 +51,7 @@ class MyApp extends StatelessWidget {
         ),
         
          home: SpashScreen (),
-        // home: TrainerHome()
-        //  home: AcademyAccount(),
-        // home: DetailsEdit(),
-        // home: ClubHome(),
-        //  home: PersonalDetail(),
+     
          ),
     );
   }

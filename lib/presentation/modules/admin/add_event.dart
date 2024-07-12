@@ -29,6 +29,8 @@ class _AddEventState extends State<AddEvent> {
   final timing = TextEditingController();
 
   final joinFee = TextEditingController();
+  final target = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   XFile? imageFile;
@@ -55,8 +57,8 @@ class _AddEventState extends State<AddEvent> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Container(
-          height: 600,
-          width: 350,
+          // height: 600,
+          // width: 350,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.blueGrey)),
@@ -144,7 +146,7 @@ class _AddEventState extends State<AddEvent> {
                         const Icon(Icons.date_range),
                         const Text("Date"),
                         Text(selectedDate != null
-                            ? "${selectedDate}"
+                            ? "${selectedDate!.year} - ${selectedDate!.month} - ${selectedDate!.day}"
                             : "Select Date")
                       ],
                     ),
@@ -169,7 +171,7 @@ class _AddEventState extends State<AddEvent> {
                         const Icon(Icons.timer),
                         const Text("Time"),
                         Text(selectedTime != null
-                            ? "${selectedTime}"
+                            ? "${selectedTime!.hour}:${selectedTime!.minute}"
                             : "Select TIme")
                       ],
                     ),
@@ -195,6 +197,26 @@ class _AddEventState extends State<AddEvent> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 100, top: 30, left: 20),
+                    child: TextFormField(
+                      maxLength: 2,
+                      keyboardType: TextInputType.number,
+                      controller: target,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Field is required";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        hintText: "Expected Team",
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -202,46 +224,47 @@ class _AddEventState extends State<AddEvent> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           if (imageFile != null) {
-                        if (selectedDate != null && selectedTime != null) {
-                         
-                            DbController.getLocation(location.text).then((loc) {
-                            DbController()
-                                .uploadImage(imageFile!, "Events")
-                                .then((url) {
-                              DbController()
-                                  .addEvents(EventModel(
-                                      type: Provider.of<DBFunctions>(context,
-                                              listen: false)
-                                          .selectedSport!,
-                                      lat: loc.latitude,
-                                      lon: loc.longitude,
-                                      hosterId: FirebaseAuth
-                                          .instance.currentUser!.uid,
-                                      eventHoster: widget.hosterType,
-                                      joinfee: joinFee.text,
-                                      eventName: eventname.text,
-                                      imageUrl: url,
-                                      location: location.text,
-                                      time: _combineDateTime()))
-                                  .then((value) {
-                                Navigator.pop(context);
-                                Helper.successSnackBar(
-                                    context, "Event Added Successful!");
+                            if (selectedDate != null && selectedTime != null) {
+                              DbController.getLocation(location.text)
+                                  .then((loc) {
+                                DbController()
+                                    .uploadImage(imageFile!, "Events")
+                                    .then((url) {
+                                  DbController()
+                                      .addEvents(EventModel(
+                                          targetPartipent:
+                                              int.parse(target.text),
+                                          type: Provider.of<DBFunctions>(
+                                                  context,
+                                                  listen: false)
+                                              .selectedSport!,
+                                          lat: loc.latitude,
+                                          lon: loc.longitude,
+                                          hosterId: FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          eventHoster: widget.hosterType,
+                                          joinfee: joinFee.text,
+                                          eventName: eventname.text,
+                                          imageUrl: url,
+                                          location: location.text,
+                                          time: _combineDateTime()))
+                                      .then((value) {
+                                    Navigator.pop(context);
+                                    Helper.successSnackBar(
+                                        context, "Event Added Successful!");
+                                  });
+                                });
+                              }).catchError((onError) {
+                                Helper.errorSnackBar(
+                                    context, "Error while fetching   location");
                               });
-                            });
-                          }).catchError((onError) {
-                            Helper.errorSnackBar(
-                                context, "Error while fetching   location");
-                          });
-
-                              }else{
-                                                            Helper.errorSnackBar(context, "Select Date And Time!");
-
-                              }
-
                             } else {
-                              Helper.errorSnackBar(context, "Pick Image!");
+                              Helper.errorSnackBar(
+                                  context, "Select Date And Time!");
                             }
+                          } else {
+                            Helper.errorSnackBar(context, "Pick Image!");
+                          }
                         }
                       },
                       child: const Text(
@@ -260,10 +283,11 @@ class _AddEventState extends State<AddEvent> {
   String _combineDateTime() {
     String? combineString;
     if (selectedDate != null && selectedTime != null) {
-      final formatedDate = DateFormat("dd MMMM yyyy").format(selectedDate!).toString();
+      final formatedDate =
+          DateFormat("dd MMMM yyyy").format(selectedDate!).toString();
       final formatedTime = "${selectedTime!.hour}:${selectedTime!.minute}";
-final list=[formatedDate,formatedTime];
-combineString=list.join(' at ');
+      final list = [formatedDate, formatedTime];
+      combineString = list.join(' at ');
       log('Timestamp: $combineString');
 
       //  25 June 2024 at 13:39:13

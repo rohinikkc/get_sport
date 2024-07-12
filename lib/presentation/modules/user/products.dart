@@ -6,7 +6,7 @@ import 'package:getsport/data/db_controller.dart';
 import 'package:getsport/data/functions.dart';
 import 'package:getsport/data/model/product_model.dart';
 import 'package:getsport/presentation/modules/user/prductdet.dart';
-import 'package:getsport/presentation/modules/user/wishlist.dart';
+import 'package:getsport/presentation/widget/wishlist.dart';
 import 'package:getsport/presentation/widget/helper.dart';
 import 'package:getsport/presentation/widget/rating_bar.dart';
 import 'package:provider/provider.dart';

@@ -31,9 +31,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      
-    });
+    setState(() {});
     return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -85,13 +83,36 @@ class _SearchState extends State<Search> {
                     return AlertDialog(
                       elevation: 10,
                       shape: const ContinuousRectangleBorder(),
-                      title: Row(children: [
-                         const Spacer(),
-                        Helper.indiacator(),
-                        const Spacer(),
-                        const Text("Fething Location...",style: TextStyle(fontSize: 15),),
-                         const Spacer(),
-                      ],),);
+                      title: Row(
+                        children: [
+                          const Spacer(),
+                          Helper.indiacator(),
+                          const Spacer(),
+                          const Text(
+                            "Fething Location...",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return AlertDialog(
+                      elevation: 10,
+                      shape: const ContinuousRectangleBorder(),
+                      title: Row(
+                        children: [
+                          const Spacer(),
+                          const Spacer(),
+                          Text(
+                            snapshot.error.toString(),
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    );
                   }
                   return TabBarView(children: [
                     FutureBuilder(
@@ -133,6 +154,7 @@ class _SearchState extends State<Search> {
                                                       const EdgeInsets.all(10),
                                                   child: SizedBox(
                                                     height: 200,
+                                                    width: 150,
                                                     child: Image.network(
                                                         listOfEvents[index]
                                                             .imageUrl),
@@ -144,54 +166,83 @@ class _SearchState extends State<Search> {
                                                       padding:
                                                           const EdgeInsets.only(
                                                               top: 30,
-                                                              bottom: 30),
+                                                              bottom: 5),
                                                       child: Text(
                                                         listOfEvents[index]
-                                                            .eventName,
+                                                            .eventName
+                                                            .toUpperCase(),
                                                         style: const TextStyle(
+                                                            letterSpacing: 2,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            fontSize: 14),
+                                                            fontSize: 16),
                                                       ),
                                                     ),
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              right: 80),
+                                                              right: 10),
                                                       child: Row(
                                                         children: [
                                                           const Icon(Icons
                                                               .location_on),
-                                                          Text(listOfEvents[
-                                                                  index]
-                                                              .location),
+                                                          Text(
+                                                              listOfEvents[index]
+                                                                  .location
+                                                                  .toUpperCase(),
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize:
+                                                                      14)),
                                                         ],
                                                       ),
                                                     ),
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 100),
-                                                      child: Row(
-                                                        children: [
-                                                          const Icon(Icons
-                                                              .currency_rupee),
-                                                          Text(listOfEvents[
-                                                                  index]
-                                                              .joinfee),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Text(
-                                                        "Timing: ${listOfEvents[index].time}"),
-                                                    const SizedBox(
-                                                      height: 10,
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        FutureBuilder(
+                                                            future: DbController()
+                                                                .getRegEventCount(
+                                                                    listOfEvents[
+                                                                            index]
+                                                                        .eventId),
+                                                            builder: (context,
+                                                                snapshot) {
+                                                              if (snapshot
+                                                                      .connectionState ==
+                                                                  ConnectionState
+                                                                      .waiting) {
+                                                                return Text(
+                                                                    "calulating...");
+                                                              }
+                                                              return Text(
+                                                                "Remining Slote :${listOfEvents[index].targetPartipent - snapshot.data!}",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .red),
+                                                              );
+                                                            }),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Text(
+                                                            "Reg. Fee :₹${listOfEvents[index].joinfee}"),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Text(
+                                                            "Timing: ${listOfEvents[index].time}"),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                      ],
                                                     ),
                                                     Text(
                                                         "Hosted by: ${listOfEvents[index].eventHoster}"),
@@ -201,18 +252,53 @@ class _SearchState extends State<Search> {
                                             ),
                                           ),
                                         ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EventView(
-                                                            model: listOfEvents[
-                                                                index],
-                                                          )));
-                                            },
-                                            child: const Text("Resister"))
+                                        FutureBuilder(
+                                            future: DbController()
+                                                .getRegEventCount(
+                                                    listOfEvents[index]
+                                                        .eventId),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              }
+                                              final availableSlote =
+                                                  listOfEvents[index]
+                                                          .targetPartipent -
+                                                      snapshot.data!;
+                                              return ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              availableSlote ==
+                                                                      0
+                                                                  ? Colors.grey
+                                                                  : Colors
+                                                                      .green),
+                                                  onPressed: () {
+                                                    if (availableSlote != 0) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      EventView(
+                                                                        model: listOfEvents[
+                                                                            index],
+                                                                      )));
+                                                    }
+                                                  },
+                                                  child: Text(
+                                                    availableSlote == 0
+                                                        ? "Slote Full"
+                                                        : "Resister Now",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ));
+                                            })
                                       ],
                                     );
                                   },
@@ -377,6 +463,9 @@ class _SearchState extends State<Search> {
                                             ),
                                           ),
                                           ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.green),
                                               onPressed: () {
                                                 Navigator.push(
                                                     context,
@@ -388,7 +477,11 @@ class _SearchState extends State<Search> {
                                                                       index],
                                                             )));
                                               },
-                                              child: const Text("BOOK"))
+                                              child: const Text(
+                                                "Book Now",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))
                                         ],
                                       ),
                                     );

@@ -54,13 +54,17 @@ class ChatPage extends StatelessWidget {
             if (snapshot.hasData) {
               return Padding(
                 padding: const EdgeInsets.all(10),
-                child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
-                        ),
-                    itemCount: listOFMessages.length,
-                    itemBuilder: (context, index) =>
-                        message(listOFMessages[index])),
+                child: listOFMessages.isEmpty
+                    ? Center(
+                        child: Text("No Messages"),
+                      )
+                    : ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 10,
+                            ),
+                        itemCount: listOFMessages.length,
+                        itemBuilder: (context, index) =>
+                            message(listOFMessages[index])),
               );
             } else {
               return const SizedBox();

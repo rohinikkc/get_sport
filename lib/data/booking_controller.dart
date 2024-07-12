@@ -12,8 +12,6 @@ class BookingController with ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final now = DateTime.now();
 
-
-
   BookingModel? _bookingModel;
   final auth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance;
@@ -23,10 +21,10 @@ class BookingController with ChangeNotifier {
   List<DateTimeRange> converted = [];
   String? _venueID;
 
-  getMyBookingsForConvert() async {
+  Future getMyBookingsForConvert() async {
     log(_venueID.toString());
     final snapshot = await db
-        .collection("doctor")
+        .collection("bookings")
         .doc(_venueID)
         .collection("bookings")
         .get();
@@ -36,12 +34,11 @@ class BookingController with ChangeNotifier {
   }
 
   Future init(
-    
-      String doctorName, userName, venueId, userEmail,int amount) async {
+      String doctorName, userName, venueId, userEmail, int amount) async {
     _venueID = venueId;
     mockBookingService = BookingService(
         userName: userName,
-        servicePrice:amount, 
+        servicePrice: amount,
         serviceId: venueId,
         userId: auth.currentUser!.uid,
         userEmail: userEmail,
@@ -56,7 +53,10 @@ class BookingController with ChangeNotifier {
   // final now="${tim.hour}"
 
   List<DateTimeRange> convertStreamResultMock({required dynamic streamResult}) {
-    getMyBookingsForConvert();
+    getMyBookingsForConvert().then((value) {
+      log("rrrrrrrrrrrrrrr${myBookings.toString()}");
+    });
+
     converted = myBookings
         .where((element) => element.venueID == _venueID)
         .map((booking) => DateTimeRange(
@@ -70,6 +70,9 @@ class BookingController with ChangeNotifier {
 
   Stream<dynamic>? getBookingStreamMock(
       {required DateTime end, required DateTime start}) {
+    log(start.toString());
+    log(end.toString());
+
     return Stream.value([]);
   }
 
@@ -94,18 +97,17 @@ class BookingController with ChangeNotifier {
 
   Future bookNewSchedule(BookingService newBooking) async {
     _bookingModel = BookingModel(
-        status: "Pending",
-        payment: "130",
-        bookingid: newBooking.bookingStart.toString(),
-        userName: newBooking.userName ?? 'unknown',
-        bookingTime: newBooking.bookingStart.toString(),
-        bookingEndTime: newBooking.bookingEnd.toString(),
-        venueID: newBooking.serviceId.toString(),
-        userid: newBooking.userId.toString(),
-        email: newBooking.userEmail.toString(),
-      );
+      status: "Pending",
+      payment: "130",
+      bookingid: newBooking.bookingStart.toString(),
+      userName: newBooking.userName ?? 'unknown',
+      bookingTime: newBooking.bookingStart.toString(),
+      bookingEndTime: newBooking.bookingEnd.toString(),
+      venueID: newBooking.serviceId.toString(),
+      userid: newBooking.userId.toString(),
+      email: newBooking.userEmail.toString(),
+    );
 
- 
     print('////////////${newBooking.serviceId}');
     await firebaseFirestore
         .collection('bookings')
@@ -122,8 +124,4 @@ class BookingController with ChangeNotifier {
 
     print('/////////Uploaded successfully');
   }
-
-
-
-
 }

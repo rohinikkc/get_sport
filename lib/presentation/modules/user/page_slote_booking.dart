@@ -26,8 +26,9 @@ class SlotePackagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: Colors.grey[850],
+      backgroundColor: Color.fromRGBO(229, 239, 255, 1),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -44,7 +45,7 @@ class SlotePackagePage extends StatelessWidget {
         toolbarHeight: 50,
         title: Text(
           "Booking",
-          style: GoogleFonts.inknutAntiqua(color: Colors.white, fontSize: 17),
+          style: GoogleFonts.poppins(color: Colors.black, fontSize: 17),
         ),
       ),
       body: Column(
@@ -53,31 +54,28 @@ class SlotePackagePage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.access_time_rounded,
-                  color: Colors.amber[900],
+                  color: Colors.black,
                   size: 30,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Text("Time Slots:",
-                      style: GoogleFonts.inknutAntiqua(
-                          color: Colors.amber[900], fontSize: 20)),
+                      style: GoogleFonts.poppins(
+                          color: Colors.black, fontSize: 20)),
                 ),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           Consumer<BookingController>(builder: (context, controller, child) {
             return Expanded(
               child: FutureBuilder(
                   future: controller.init(
-                    
-                    venueName,
-                    name,
-                    venueID,
-                    email,
-                    amount.toInt()
-                  ),
+                      venueName, name, venueID, email, amount.toInt()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -85,6 +83,9 @@ class SlotePackagePage extends StatelessWidget {
                       );
                     }
                     return BookingCalendar(
+                      selectedSlotTextStyle: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      bookedSlotTextStyle: const TextStyle(color: Colors.white),
                       bookingService: controller.mockBookingService!,
                       getBookingStream: controller.getBookingStreamMock,
                       uploadBooking: ({required newBooking}) {
@@ -93,38 +94,9 @@ class SlotePackagePage extends StatelessWidget {
                             .then((value) {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => PaymentPage(
-                                bookingService: newBooking,
+                                    bookingService: newBooking,
                                     amount: amount,
                                   )));
-      
-                          // if (isFreeBook == false) {
-                          //   // Navigator.of(context).push(MaterialPageRoute(
-                          //   //     builder: (context) => PaymentPage(
-                          //   //       isPaymentForMentor: false,
-                          //   //           newBooking: value,
-                          //   //         )));
-                          // } else {
-                          //   if (isRescheduling == true) {
-                          //     BookingController()
-                          //         .recheduleDoctor(
-                          //             bookingIdForReshedule, venueID, value)
-                          //         .then((value) {
-                          //       Navigator.pushReplacement(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) => const success()));
-                          //     });
-                          //   } else {
-                          //     BookingController()
-                          //         .bookNewSchedule(value)
-                          //         .then((value) {
-                          //       Navigator.pushReplacement(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) => const success()));
-                          //     });
-                          // }
-                          // }
                         });
                       },
                       pauseSlots: controller.generatePauseSlots(),
